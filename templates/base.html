@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyLife Partner</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">
+            <span class="material-symbols-outlined">school</span>
+            <span class="text">StudyLife</span>
+        </div>
+        <ul class="menu-content">
+            <li><a href="{% url 'home' %}"><span class="material-symbols-outlined">home</span><span class="text">Início</span></a></li>
+            
+            <!-- Módulo de Estudos -->
+            <li class="menu-header"><span class="text">Estudos</span></li>
+            <li><a href="{% url 'disciplinas' %}"><span class="material-symbols-outlined">book</span><span class="text">Disciplinas</span></a></li>
+            <li><a href="{% url 'flashcards' %}"><span class="material-symbols-outlined">style</span><span class="text">Flashcards</span></a></li>
+            <li><a href="{% url 'anotacoes' %}"><span class="material-symbols-outlined">edit_note</span><span class="text">Anotações</span></a></li>
+            
+            <!-- Módulo de Planejamento -->
+            <li class="menu-header"><span class="text">Planejamento</span></li>
+            <li><a href="{% url 'calendario' %}"><span class="material-symbols-outlined">calendar_month</span><span class="text">Calendário</span></a></li>
+            <li><a href="{% url 'refeicoes' %}"><span class="material-symbols-outlined">restaurant</span><span class="text">Refeições</span></a></li>
+            <li><a href="{% url 'receitas' %}"><span class="material-symbols-outlined">menu_book</span><span class="text">Receitas</span></a></li>
+            
+            <!-- Módulo de Bem-estar -->
+            <li class="menu-header"><span class="text">Bem-estar</span></li>
+            <li><a href="{% url 'lembretes' %}"><span class="material-symbols-outlined">notifications</span><span class="text">Lembretes</span></a></li>
+            <li><a href="{% url 'relaxamento' %}"><span class="material-symbols-outlined">self_improvement</span><span class="text">Relaxamento</span></a></li>
+            <li><a href="{% url 'motivacional' %}"><span class="material-symbols-outlined">favorite</span><span class="text">Motivação</span></a></li>
+            
+            <!-- Módulo de Conexão -->
+            <li class="menu-header"><span class="text">Conexão</span></li>
+            <li><a href="{% url 'mural' %}"><span class="material-symbols-outlined">forum</span><span class="text">Mural de Recados</span></a></li>
+            
+            <!-- Configurações e Conta -->
+            <li class="menu-header"><span class="text">Sistema</span></li>
+            <li><a href="{% url 'settings' %}"><span class="material-symbols-outlined">settings</span><span class="text">Configurações</span></a></li>
+            <li><a href="{% url 'account' %}"><span class="material-symbols-outlined">person</span><span class="text">Conta</span></a></li>
+            <li><a href="{% url 'logout' %}"><span class="material-symbols-outlined">logout</span><span class="text">Sair</span></a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

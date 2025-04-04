@@ -1,0 +1,48 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Flashcards{% endblock %}
+
+{% block content_actions %}
+<a href="#" class="btn-primary">Novo Flashcard</a>
+{% endblock %}
+
+{% block content_body %}
+<div class="filter-bar">
+    <select id="disciplina-filter">
+        <option value="">Todas as disciplinas</option>
+        {% for disciplina in disciplinas %}
+        <option value="{{ disciplina.id }}" {% if request.GET.disciplina == disciplina.id|stringformat:"i" %}selected{% endif %}>{{ disciplina.nome }}</option>
+        {% endfor %}
+    </select>
+    <select id="dificuldade-filter">
+        <option value="">Todas as dificuldades</option>
+        <option value="1">Fácil</option>
+        <option value="2">Médio</option>
+        <option value="3">Difícil</option>
+    </select>
+</div>
+
+<div class="flashcards-container">
+    {% if flashcards %}
+        {% for flashcard in flashcards %}
+        <div class="flashcard" data-disciplina="{{ flashcard.disciplina.id }}" data-dificuldade="{{ flashcard.dificuldade }}">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <p>{{ flashcard.pergunta }}</p>
+                    <small class="flashcard-info">{{ flashcard.disciplina.nome }}</small>
+                </div>
+                <div class="flashcard-back">
+                    <p>{{ flashcard.resposta }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <span class="material-symbols-outlined">style</span>
+            <p>Nenhum flashcard encontrado. Adicione flashcards para começar a estudar!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

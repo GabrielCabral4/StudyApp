@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header">
+    <h1>{% block page_title %}Título da Página{% endblock %}</h1>
+    {% block content_actions %}{% endblock %}
+</div>
+
+<div class="content-body">
+    {% block content_body %}{% endblock %}
+</div>
+{% endblock %}

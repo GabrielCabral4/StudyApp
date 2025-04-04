@@ -1,0 +1,50 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Disciplinas{% endblock %}
+
+{% block content_actions %}
+<a href="#" class="btn-primary">Nova Disciplina</a>
+{% endblock %}
+
+{% block content_body %}
+<div class="filter-bar">
+    <select id="periodo-filter">
+        <option value="">Todos os períodos</option>
+        <option value="1">1º Período</option>
+        <option value="2">2º Período</option>
+        <option value="3">3º Período</option>
+        <option value="4">4º Período</option>
+        <option value="5">5º Período</option>
+        <option value="6">6º Período</option>
+    </select>
+    <input type="text" id="search-input" placeholder="Buscar disciplina...">
+</div>
+
+<div class="disciplines-grid">
+    {% if disciplinas %}
+        {% for disciplina in disciplinas %}
+        <div class="discipline-card" data-periodo="{{ disciplina.periodo }}">
+            <div class="discipline-header">
+                <h3>{{ disciplina.nome }}</h3>
+                <span class="badge">{{ disciplina.periodo }}º Período</span>
+            </div>
+            <p>{{ disciplina.descricao }}</p>
+            <div class="discipline-actions">
+                <a href="{% url 'flashcards' %}?disciplina={{ disciplina.id }}" class="btn-outline">
+                    <span class="material-symbols-outlined">style</span> Flashcards
+                </a>
+                <a href="{% url 'anotacoes' %}?disciplina={{ disciplina.id }}" class="btn-outline">
+                    <span class="material-symbols-outlined">edit_note</span> Anotações
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <span class="material-symbols-outlined">school</span>
+            <p>Nenhuma disciplina cadastrada. Comece adicionando suas disciplinas do período!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

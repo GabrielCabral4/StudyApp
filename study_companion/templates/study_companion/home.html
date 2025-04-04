@@ -1,0 +1,115 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Bem-vinda ao StudyLife Partner{% endblock %}
+
+{% block content_body %}
+<div class="dashboard-cards">
+    <!-- Próximos Eventos -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Próximos Eventos</h2>
+            <a href="{% url 'calendario' %}" class="btn-link">Ver todos</a>
+        </div>
+        <div class="card-body">
+            {% if proximos_eventos %}
+                <ul class="event-list">
+                    {% for evento in proximos_eventos %}
+                    <li>
+                        <div class="event-date">{{ evento.data|date:"d/m" }}</div>
+                        <div class="event-details">
+                            <h3>{{ evento.titulo }}</h3>
+                            <p>{{ evento.get_tipo_display }} {% if evento.disciplina %}- {{ evento.disciplina.nome }}{% endif %}</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">Sem eventos próximos.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recados não lidos -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Recados</h2>
+            <a href="{% url 'mural' %}" class="btn-link">Ver todos</a>
+        </div>
+        <div class="card-body">
+            {% if recados_nao_lidos %}
+                <ul class="message-list">
+                    {% for recado in recados_nao_lidos %}
+                    <li>
+                        <div class="message-content">
+                            <p>"{{ recado.conteudo|truncatechars:80 }}"</p>
+                            <small>De: {{ recado.autor }} - {{ recado.data_criacao|date:"d/m/Y" }}</small>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">Nenhum recado novo.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Lembretes -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Lembretes</h2>
+            <a href="{% url 'lembretes' %}" class="btn-link">Ver todos</a>
+        </div>
+        <div class="card-body">
+            {% if lembretes_ativos %}
+                <ul class="reminder-list">
+                    {% for lembrete in lembretes_ativos %}
+                    <li>
+                        <div class="reminder-icon">
+                            <span class="material-symbols-outlined">
+                                {% if lembrete.tipo == 'pausa' %}break_time
+                                {% elif lembrete.tipo == 'agua' %}water_drop
+                                {% elif lembrete.tipo == 'alongamento' %}fitness_center
+                                {% else %}notifications{% endif %}
+                            </span>
+                        </div>
+                        <div class="reminder-details">
+                            <h3>{{ lembrete.get_tipo_display }}</h3>
+                            <p>{{ lembrete.mensagem }}</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty-state">Sem lembretes ativos.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <h2>Acesso Rápido</h2>
+    <div class="action-buttons">
+        <a href="{% url 'flashcards' %}" class="action-btn">
+            <span class="material-symbols-outlined">style</span>
+            <span>Flashcards</span>
+        </a>
+        <a href="{% url 'anotacoes' %}" class="action-btn">
+            <span class="material-symbols-outlined">edit_note</span>
+            <span>Anotações</span>
+        </a>
+        <a href="{% url 'calendario' %}" class="action-btn">
+            <span class="material-symbols-outlined">calendar_month</span>
+            <span>Calendário</span>
+        </a>
+        <a href="{% url 'mural' %}" class="action-btn">
+            <span class="material-symbols-outlined">forum</span>
+            <span>Mural</span>
+        </a>
+        <a href="{% url 'relaxamento' %}" class="action-btn">
+            <span class="material-symbols-outlined">self_improvement</span>
+            <span>Relaxar</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

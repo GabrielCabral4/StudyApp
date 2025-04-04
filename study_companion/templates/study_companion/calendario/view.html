@@ -1,0 +1,65 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Calendário {% endblock %}
+
+{% block content_actions %}
+<a href="#" class="btn-primary">Novo Evento</a>
+{% endblock %}
+
+{% block content_body %}
+<div class="calendar-header">
+    <button id="prev-month" class="btn-icon"><span class="material-symbols-outlined">chevron_left</span></button>
+    <h2>{{ hoje|date:"F Y" }}</h2>
+    <button id="next-month" class="btn-icon"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+
+<div class="calendar-grid">
+    <div class="calendar-day day-header">Dom</div>
+    <div class="calendar-day day-header">Seg</div>
+    <div class="calendar-day day-header">Ter</div>
+    <div class="calendar-day day-header">Qua</div>
+    <div class="calendar-day day-header">Qui</div>
+    <div class="calendar-day day-header">Sex</div>
+    <div class="calendar-day day-header">Sáb</div>
+    
+    <!-- Aqui você precisará de lógica JavaScript para montar o calendário -->
+    <!-- Este é um placeholder para ilustração -->
+    {% for day in 1|rjust:"35" %}
+    <div class="calendar-day {% if forloop.counter == hoje.day %}today{% endif %}">
+        <div class="day-number">{{ forloop.counter }}</div>
+        <div class="day-events">
+            {% for evento in eventos %}
+                {% if evento.data.day == forloop.parentloop.counter %}
+                <div class="event-dot" data-event-id="{{ evento.id }}" data-event-title="{{ evento.titulo }}" data-event-type="{{ evento.tipo }}"></div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="upcoming-events">
+    <h3>Próximos Eventos</h3>
+    <ul class="event-list">
+        {% for evento in eventos %}
+            {% if evento.data >= hoje %}
+            <li class="event-item {{ evento.tipo }}">
+                <div class="event-date">{{ evento.data|date:"d/m" }}</div>
+                <div class="event-details">
+                    <h4>{{ evento.titulo }}</h4>
+                    <p>{{ evento.get_tipo_display }} 
+                    {% if evento.disciplina %}- {{ evento.disciplina.nome }}{% endif %}
+                    </p>
+                    {% if evento.descricao %}
+                    <p class="event-description">{{ evento.descricao }}</p>
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+        {% empty %}
+            <li class="empty-state">Sem eventos próximos.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

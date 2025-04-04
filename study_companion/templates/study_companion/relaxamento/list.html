@@ -1,0 +1,41 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Atividades de Relaxamento{% endblock %}
+
+{% block content_actions %}
+<a href="#" class="btn-primary">Nova Atividade</a>
+{% endblock %}
+
+{% block content_body %}
+<div class="filter-bar">
+    <select id="duracao-filter">
+        <option value="">Todas as durações</option>
+        <option value="5">Até 5 minutos</option>
+        <option value="10">Até 10 minutos</option>
+        <option value="15">Até 15 minutos</option>
+        <option value="30">Até 30 minutos</option>
+    </select>
+</div>
+
+<div class="relaxation-grid">
+    {% if atividades %}
+        {% for atividade in atividades %}
+        <div class="relaxation-card" data-duracao="{{ atividade.duracao }}">
+            <div class="relaxation-header">
+                <span class="material-symbols-outlined">self_improvement</span>
+                <h3>{{ atividade.titulo }}</h3>
+                <span class="time-badge">{{ atividade.duracao }} min</span>
+            </div>
+            <p>{{ atividade.descricao }}</p>
+            <button class="btn-start">Começar Agora</button>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <span class="material-symbols-outlined">self_improvement</span>
+            <p>Nenhuma atividade de relaxamento cadastrada. Adicione atividades para gerenciar seus momentos de descanso!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
