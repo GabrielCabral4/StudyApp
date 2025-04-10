@@ -145,3 +145,135 @@ body {
         margin-left: 220px;
     }
 }
+
+.icon-expand {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    padding: 12px 24px; 
+    margin: 10px;
+    border-radius: 8px; 
+    overflow: hidden;
+    text-align: center;
+    background-color: transparent;
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    font-weight: bold;
+    line-height: normal; 
+}
+
+  
+.icon-expand::before,
+.icon-expand::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transition: all 0.25s ease;
+    border-radius: 8px; 
+    z-index: 0;
+}
+  
+.icon-expand::after {
+    box-shadow: inset 0 0 0 1px #007bff; 
+}
+  
+.icon-expand::before {
+    background: #007bff; 
+    box-shadow: inset 0 0 0 60px #a3cfff; 
+}
+  
+.icon-expand:hover::before {
+    box-shadow: inset 0 0 0 1px #2d2c3e;
+}
+  
+.icon-expand span {
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+.background-disciplinas {
+    background: transparent;
+    padding: 40px 20px;
+    position: relative;
+    min-height: 100vh;
+    border-radius: 12px;
+}
+
+.disciplines-grid {
+    position: relative;
+    padding: 2rem;
+    z-index: 1;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+    margin-top: 0;
+    font-size: 1.4rem;
+}
+
+.discipline-card,
+.discipline-header,
+.discipline-actions,
+.badge {
+    position: relative;
+    z-index: 2;
+}
+
+.discipline-actions {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-outline {
+    background: none;
+    border: 1px solid #007bff;
+    color: #007bff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: 0.2s;
+}
+
+.btn-outline:hover {
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+}
+
+.material-symbols-outlined {
+    font-size: 18px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/static/img/disciplinas.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);  
+    opacity: 0.6; 
+    z-index: -1;
+    pointer-events: none;
+}

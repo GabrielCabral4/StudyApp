@@ -1,0 +1,13 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Adicionar Disciplina{% endblock %}
+
+{% block content_body %}
+<h2>Nova Disciplina</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-primary">Salvar</button>
+</form>
+{% endblock %}

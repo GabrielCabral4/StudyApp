@@ -1,9 +1,11 @@
 from django.db import models
 from django.utils import timezone
 
+PERIODO_CHOICES = [(i, f"{i}° Período") for i in range(1, 13)]
+
 class Disciplina(models.Model):
     nome = models.CharField(max_length=100)
-    periodo = models.IntegerField()
+    periodo = models.IntegerField(choices=PERIODO_CHOICES)
     descricao = models.TextField(blank=True)
 
     def __str__(self):

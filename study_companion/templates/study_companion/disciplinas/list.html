@@ -4,47 +4,66 @@
 {% block page_title %}Disciplinas{% endblock %}
 
 {% block content_actions %}
-<a href="#" class="btn-primary">Nova Disciplina</a>
+<a href="{% url 'disciplina_add' %}" class="icon-expand">
+    <span>Nova Disciplina</span>
+</a>
 {% endblock %}
 
 {% block content_body %}
-<div class="filter-bar">
-    <select id="periodo-filter">
-        <option value="">Todos os períodos</option>
-        <option value="1">1º Período</option>
-        <option value="2">2º Período</option>
-        <option value="3">3º Período</option>
-        <option value="4">4º Período</option>
-        <option value="5">5º Período</option>
-        <option value="6">6º Período</option>
-    </select>
-    <input type="text" id="search-input" placeholder="Buscar disciplina...">
-</div>
+<div class="background-disciplinas">
+    <form method="get" action="{% url 'disciplinas' %}">
+        <div class="filter-bar">
+            <select name="periodo" id="periodo-filter">
+                <option value="">Todos os períodos</option>
+                <option value="1" {% if request.GET.periodo == '1' %}selected{% endif %}>1º Período</option>
+                <option value="2" {% if request.GET.periodo == '2' %}selected{% endif %}>2º Período</option>
+                <option value="3" {% if request.GET.periodo == '3' %}selected{% endif %}>3º Período</option>
+                <option value="4" {% if request.GET.periodo == '4' %}selected{% endif %}>4º Período</option>
+                <option value="5" {% if request.GET.periodo == '5' %}selected{% endif %}>5º Período</option>
+                <option value="6" {% if request.GET.periodo == '6' %}selected{% endif %}>6º Período</option>
+                <option value="7" {% if request.GET.periodo == '7' %}selected{% endif %}>7º Período</option>
+                <option value="8" {% if request.GET.periodo == '8' %}selected{% endif %}>8º Período</option>
+                <option value="9" {% if request.GET.periodo == '9' %}selected{% endif %}>9º Período</option>
+                <option value="10" {% if request.GET.periodo == '10' %}selected{% endif %}>10º Período</option>
+                <option value="11" {% if request.GET.periodo == '11' %}selected{% endif %}>11º Período</option>
+                <option value="12" {% if request.GET.periodo == '12' %}selected{% endif %}>12º Período</option>
+            </select>
+            <input type="text" name="search" id="search-input" placeholder="Buscar disciplina..." value="{{ request.GET.search }}">
+            <button type="submit" class="btn-primary">Filtrar</button>
+        </div>
+    </form>
 
-<div class="disciplines-grid">
-    {% if disciplinas %}
-        {% for disciplina in disciplinas %}
-        <div class="discipline-card" data-periodo="{{ disciplina.periodo }}">
-            <div class="discipline-header">
-                <h3>{{ disciplina.nome }}</h3>
-                <span class="badge">{{ disciplina.periodo }}º Período</span>
+    <div class="disciplines-grid">
+        {% if disciplinas %}
+            {% for disciplina in disciplinas %}
+            <div class="discipline-card card" data-periodo="{{ disciplina.periodo }}">
+                <div class="discipline-header">
+                    <h3>{{ disciplina.nome }}</h3>
+                    <span class="badge">{{ disciplina.periodo }}º Período</span>
+                </div>
+                <p>{{ disciplina.descricao }}</p>
+                <div class="discipline-actions">
+                    <a href="{% url 'flashcards' %}?disciplina={{ disciplina.id }}" class="btn-outline">
+                        <span class="material-symbols-outlined">style</span> Flashcards
+                    </a>
+                    <a href="{% url 'anotacoes' %}?disciplina={{ disciplina.id }}" class="btn-outline">
+                        <span class="material-symbols-outlined">edit_note</span> Anotações
+                    </a>
+                    <a href="{% url 'disciplina_edit' disciplina.id %}" class="btn-outline">
+                        <span class="material-symbols-outlined">edit</span> Editar
+                    </a>
+                    <a href="{% url 'disciplina_delete' disciplina.id %}" class="btn-outline">
+                        <span class="material-symbols-outlined">delete</span> Deletar
+                    </a>
+                </div>
             </div>
-            <p>{{ disciplina.descricao }}</p>
-            <div class="discipline-actions">
-                <a href="{% url 'flashcards' %}?disciplina={{ disciplina.id }}" class="btn-outline">
-                    <span class="material-symbols-outlined">style</span> Flashcards
-                </a>
-                <a href="{% url 'anotacoes' %}?disciplina={{ disciplina.id }}" class="btn-outline">
-                    <span class="material-symbols-outlined">edit_note</span> Anotações
-                </a>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <span class="material-symbols-outlined">school</span>
+                <p>Nenhuma disciplina cadastrada. Comece adicionando suas disciplinas do período!</p>
             </div>
-        </div>
-        {% endfor %}
-    {% else %}
-        <div class="empty-state">
-            <span class="material-symbols-outlined">school</span>
-            <p>Nenhuma disciplina cadastrada. Comece adicionando suas disciplinas do período!</p>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

@@ -4,6 +4,9 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('disciplinas/', views.disciplinas_list, name='disciplinas'),
+    path('disciplinas/nova/', views.disciplina_create, name='disciplina_add'),
+    path('disciplinas/<int:pk>/editar', views.disciplina_update, name='disciplina_edit'),
+    path('disciplinas/<int:pk>/deletar', views.disciplina_delete, name='disciplina_delete'),
     path('flashcards/', views.flashcards_list, name='flashcards'),
     path('anotacoes/', views.anotacoes_list, name='anotacoes'),
     path('calendario/', views.calendario_view, name='calendario'),

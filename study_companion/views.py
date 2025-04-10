@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
+from .forms import DisciplinaForm
 
 
 def home(request):
@@ -24,9 +25,49 @@ def home(request):
 
 
 def disciplinas_list(request):
+    periodo_filtro = request.GET.get('periodo')
+    search_filtro = request.GET.get('search')
     disciplinas = Disciplina.objects.all().order_by('periodo', 'nome')
+    
+    if periodo_filtro:
+        disciplinas = disciplinas.filter(periodo=periodo_filtro)
+    
+    if search_filtro:
+        disciplinas = disciplinas.filter(nome__icontains=search_filtro)
+    
     return render(request, 'study_companion/disciplinas/list.html', {'disciplinas': disciplinas})
 
+
+def disciplina_create(request):
+    if request.method == 'POST':
+        form = DisciplinaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('disciplinas')
+    else:
+        form = DisciplinaForm()
+    return render(request, 'study_companion/disciplinas/create.html', {'form': form})
+
+
+def disciplina_update(request, pk):
+    disciplina = get_object_or_404(Disciplina, pk=pk)
+
+    if request.method == 'POST':
+        form = DisciplinaForm(request.POST, instance=disciplina)
+        if form.is_valid():
+            form.save()
+            return redirect('disciplinas')
+    else:
+        form = DisciplinaForm(instance=disciplina)
+    return render(request, 'study_companion/disciplinas/update.html', {'form': form, 'disciplina': disciplina})
+
+
+def disciplina_delete(request, pk):
+    disciplina = get_object_or_404(Disciplina, pk=pk)
+    if request.method == 'POST':
+        disciplina.delete()
+        return redirect('disciplinas')
+    return render(request, 'study_companion/disciplinas/delete.html', {'disciplina': disciplina})
 
 def flashcards_list(request):
     disciplinas = Disciplina.objects.all()

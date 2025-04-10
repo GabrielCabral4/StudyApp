@@ -1,0 +1,15 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Excluir Disciplina{% endblock %}
+
+{% block content_body %}
+<h2>Excluir Disciplina</h2>
+<p>Tem certeza que deseja excluir a disciplina <strong>{{ disciplina.nome }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn-primary">Sim, excluir</button>
+    <a href="{% url 'disciplinas' %}" class="btn-outline">Cancelar</a>
+</form>
+{% endblock %}
