@@ -1,0 +1,88 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+{% load text_filters %}
+
+{% block page_title %}
+    <h1 class="page-title">
+        <span class="material-symbols-outlined">edit_note</span>
+        Anotações
+    </h1>
+{% endblock %}
+
+{% block content_actions %}
+    <a href="{% url 'anotacao_add' %}" class="icon-expand">
+        <span>Nova Anotação</span>
+    </a>
+{% endblock %}
+
+{% block content_body %}
+<div class="filtros-anotacoes">
+    <form method="get" class="search-bar">
+        <input type="text" name="q" placeholder="Buscar anotações..." value="{{ request.GET.q }}">
+        <button type="submit">🔍</button>
+    </form>    
+    <form method="get" class="filtros-anotacoes" id="form-filtros-anotacoes">
+        <select name="disciplina">
+            <option value="">Todas as Disciplinas</option>
+            {% for disciplina in disciplinas %}
+                <option value="{{ disciplina.id }}" {% if request.GET.disciplina == disciplina.id|stringformat:"s" %}selected{% endif %}>
+                    {{ disciplina.nome }}
+                </option>
+            {% endfor %}
+        </select>
+    
+        <select name="categoria">
+            <option value="">Todas as Categorias</option>
+            {% for valor, nome in categorias %}
+                <option value="{{ valor }}" {% if request.GET.categoria == valor %}selected{% endif %}>
+                    {{ nome }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>      
+</div>
+
+<div id="loading-spinner" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<div class="notas-grid">
+    {% for anotacao in anotacoes %}
+        <div class="nota-card">
+            <div class="nota-header">
+                <span class="nota-categoria {{ anotacao.categoria }}">
+                    {% if anotacao.categoria == 'aula' %}
+                        <span class="material-symbols-outlined">school</span> Aula
+                    {% elif anotacao.categoria == 'caso' %}
+                        <span class="material-symbols-outlined">clinical_notes</span> Caso
+                    {% elif anotacao.categoria == 'resumo' %}
+                        <span class="material-symbols-outlined">description</span> Resumo
+                    {% endif %}
+                </span>
+                <span class="nota-data">{{ anotacao.data_criacao|date:"d M Y" }}</span>
+            </div>
+            <h3 class="nota-titulo">{{ anotacao.titulo }}</h3>
+            <p class="nota-disciplina"><strong>Disciplina:</strong> {{ anotacao.disciplina.nome }}</p>
+            <div class="nota-conteudo">
+                {{ anotacao.conteudo|safe }}
+            </div>                        
+            <div class="nota-actions">
+                <a href="{% url 'anotacao_edit' anotacao.id %}" class="btn-nota edit">
+                    <span class="material-symbols-outlined">edit</span>
+                </a>
+                <form action="{% url 'anotacao_delete' anotacao.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-nota delete" onclick="return confirm('Deseja excluir esta anotação?')">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty-state">
+            <span class="material-symbols-outlined">edit_note</span>
+            Nenhuma anotação encontrada.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

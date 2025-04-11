@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from ckeditor.fields import RichTextField
 
 PERIODO_CHOICES = [(i, f"{i}° Período") for i in range(1, 13)]
 
@@ -31,7 +32,7 @@ class Flashcard(models.Model):
 class Anotacao(models.Model):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, related_name='anotacoes')
     titulo = models.CharField(max_length=200)
-    conteudo = models.TextField()
+    conteudo = RichTextField()
     data_criacao = models.DateTimeField(auto_now_add=True)
     categoria = models.CharField(max_length=50, choices=[
         ('aula', 'Anotação de Aula'),

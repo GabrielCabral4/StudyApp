@@ -35,6 +35,18 @@
                             </div>
                             <div class="flashcard-back">
                                 <p>{{ flashcard.resposta }}</p>
+                            
+                                <div class="flashcard-actions">
+                                    <a href="{% url 'flashcard_edit' flashcard.id %}" class="btn-flashcard edit">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </a>
+                                    <form action="{% url 'flashcard_delete' flashcard.id %}" method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-flashcard delete" onclick="return confirm('Tem certeza que deseja excluir este flashcard?')">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

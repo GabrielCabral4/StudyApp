@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
-from .forms import DisciplinaForm, FlashcardForm
+from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm
+from django.views.decorators.http import require_POST
+from django.db.models import Q
 
 
 def home(request):
@@ -99,10 +101,31 @@ def flashcard_create(request):
         form = FlashcardForm()
     return render(request, 'study_companion/flashcards/create.html', {'form': form})
 
+
+def flashcard_update(request, pk):
+    flashcard = get_object_or_404(Flashcard, pk=pk)
+
+    if request.method == 'POST':
+        form = FlashcardForm(request.POST, instance=flashcard)
+        if form.is_valid():
+            form.save()
+            return redirect('flashcards')
+    else:
+        form = FlashcardForm(instance=flashcard)
+    return render(request, 'study_companion/flashcards/update.html', {'form': form, 'editar': True})
+
+@require_POST
+def flashcard_delete(request, pk):
+    flashcard = get_object_or_404(Flashcard, pk=pk)
+    flashcard.delete()
+    return redirect('flashcards')
+
+
 def anotacoes_list(request):
     disciplinas = Disciplina.objects.all()
     disciplina_id = request.GET.get('disciplina')
     categoria = request.GET.get('categoria')
+    q = request.GET.get('q')
 
     anotacoes = Anotacao.objects.all()
 
@@ -112,12 +135,48 @@ def anotacoes_list(request):
     if categoria:
         anotacoes = anotacoes.filter(categoria=categoria)
 
+    if q:
+        anotacoes = anotacoes.filter(
+         Q(titulo__icontains=q) |
+         Q(conteudo__icontains=q)
+        )
+
     return render(request, 'study_companion/anotacoes/list.html', {
         'anotacoes': anotacoes,
         'disciplinas': disciplinas,
         'categorias': [('aula', 'Anotação de Aula'), ('caso', 'Caso Clínico'), ('resumo', 'Resumo')]
     })
 
+
+def anotacao_create(request):
+    if request.method == 'POST':
+        form = AnotacaoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('anotacoes')
+    else:
+        form = AnotacaoForm()
+    return render(request, 'study_companion/anotacoes/create.html', {'form': form})
+
+
+def anotacao_update(request, pk):
+    anotacao = get_object_or_404(Anotacao, pk=pk)
+
+    if request.method == 'POST':
+        form = AnotacaoForm(request.POST, instance=anotacao)
+        if form.is_valid():
+            form.save()
+            return redirect('anotacoes')
+    else:
+        form = AnotacaoForm(instance=anotacao)
+    return render(request, 'study_companion/anotacoes/update.html', {'form': form, 'anotacao': anotacao})
+
+
+@require_POST
+def anotacao_delete(request, pk):
+    anotacao = get_object_or_404(Anotacao, pk=pk)
+    anotacao.delete()
+    return redirect('anotacoes')
 
 def calendario_view(request):
     hoje = datetime.now()

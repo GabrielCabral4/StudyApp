@@ -1,0 +1,35 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+{% load form_extras %}
+
+{% block page_title %}
+    <h1 class="page-title">
+        <span class="material-symbols-outlined">edit_note</span>
+        {{ form.instance.pk|yesno:"Editar Anotação,Criar Anotação" }}
+    </h1>
+{% endblock %}
+
+{% block content_body %}
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="id_disciplina">Disciplina:</label>
+        {{ form.disciplina|add_class:"form-control" }}
+
+        <label for="id_categoria">Categoria:</label>
+        {{ form.categoria|add_class:"form-control" }}
+
+        <label for="id_titulo">Título:</label>
+        {{ form.titulo|add_class:"form-control" }}
+
+        <label for="id_conteudo">Conteúdo:</label>
+        {{ form.conteudo|add_class:"form-control" }}
+
+        <button type="submit" class="btn-submit">
+            <span class="material-symbols-outlined">save</span>
+            Salvar
+        </button>
+    </form>
+</div>
+{% endblock %}
