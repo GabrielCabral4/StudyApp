@@ -1,7 +1,12 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
 
-{% block page_title %}Disciplinas{% endblock %}
+{% block page_title %}
+    <h1 class="page-title">
+        <span class="material-symbols-outlined">book</span>
+        Disciplinas
+    </h1>
+{% endblock %}
 
 {% block content_actions %}
 <a href="{% url 'disciplina_add' %}" class="icon-expand">
@@ -11,32 +16,52 @@
 
 {% block content_body %}
 <div class="background-disciplinas">
-    <form method="get" action="{% url 'disciplinas' %}">
-        <div class="filter-bar">
-            <select name="periodo" id="periodo-filter">
-                <option value="">Todos os períodos</option>
-                <option value="1" {% if request.GET.periodo == '1' %}selected{% endif %}>1º Período</option>
-                <option value="2" {% if request.GET.periodo == '2' %}selected{% endif %}>2º Período</option>
-                <option value="3" {% if request.GET.periodo == '3' %}selected{% endif %}>3º Período</option>
-                <option value="4" {% if request.GET.periodo == '4' %}selected{% endif %}>4º Período</option>
-                <option value="5" {% if request.GET.periodo == '5' %}selected{% endif %}>5º Período</option>
-                <option value="6" {% if request.GET.periodo == '6' %}selected{% endif %}>6º Período</option>
-                <option value="7" {% if request.GET.periodo == '7' %}selected{% endif %}>7º Período</option>
-                <option value="8" {% if request.GET.periodo == '8' %}selected{% endif %}>8º Período</option>
-                <option value="9" {% if request.GET.periodo == '9' %}selected{% endif %}>9º Período</option>
-                <option value="10" {% if request.GET.periodo == '10' %}selected{% endif %}>10º Período</option>
-                <option value="11" {% if request.GET.periodo == '11' %}selected{% endif %}>11º Período</option>
-                <option value="12" {% if request.GET.periodo == '12' %}selected{% endif %}>12º Período</option>
-            </select>
-            <input type="text" name="search" id="search-input" placeholder="Buscar disciplina..." value="{{ request.GET.search }}">
-            <button type="submit" class="btn-primary">Filtrar</button>
-        </div>
+    <div class="fundo-disciplinas"></div>
+    <form id="filtro-form" class="filter-bar">
+        <select name="periodo" id="periodo-filter">
+            <option value="">Todos os períodos</option>
+            <option value="1" {% if request.GET.periodo == '1' %}selected{% endif %}>1º Período</option>
+            <option value="2" {% if request.GET.periodo == '2' %}selected{% endif %}>2º Período</option>
+            <option value="3" {% if request.GET.periodo == '3' %}selected{% endif %}>3º Período</option>
+            <option value="4" {% if request.GET.periodo == '4' %}selected{% endif %}>4º Período</option>
+            <option value="5" {% if request.GET.periodo == '5' %}selected{% endif %}>5º Período</option>
+            <option value="6" {% if request.GET.periodo == '6' %}selected{% endif %}>6º Período</option>
+            <option value="7" {% if request.GET.periodo == '7' %}selected{% endif %}>7º Período</option>
+            <option value="8" {% if request.GET.periodo == '8' %}selected{% endif %}>8º Período</option>
+            <option value="9" {% if request.GET.periodo == '9' %}selected{% endif %}>9º Período</option>
+            <option value="10" {% if request.GET.periodo == '10' %}selected{% endif %}>10º Período</option>
+            <option value="11" {% if request.GET.periodo == '11' %}selected{% endif %}>11º Período</option>
+            <option value="12" {% if request.GET.periodo == '12' %}selected{% endif %}>12º Período</option>
+        </select>        
+        <input type="text" name="search" id="search-input" placeholder="Buscar disciplina..." value="{{ request.GET.search }}">
     </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const periodoSelect = document.getElementById('periodo-filter');
+            const searchInput = document.getElementById('search-input');
+        
+            function atualizarURL() {
+                const params = new URLSearchParams();
+                if (periodoSelect.value) params.append('periodo', periodoSelect.value);
+                if (searchInput.value) params.append('search', searchInput.value);
+                window.location.href = '?' + params.toString();
+            }
+        
+            periodoSelect.addEventListener('change', atualizarURL);
+            searchInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    atualizarURL();
+                }
+            });
+        });
+        </script>
 
     <div class="disciplines-grid">
         {% if disciplinas %}
             {% for disciplina in disciplinas %}
-            <div class="discipline-card card" data-periodo="{{ disciplina.periodo }}">
+            <div class="discipline-card card" data-periodo="{{ disciplina.periodo }}" style="background-color: {{ disciplina.cor_hex }};">
+
                 <div class="discipline-header">
                     <h3>{{ disciplina.nome }}</h3>
                     <span class="badge">{{ disciplina.periodo }}º Período</span>
@@ -61,7 +86,7 @@
         {% else %}
             <div class="empty-state">
                 <span class="material-symbols-outlined">school</span>
-                <p>Nenhuma disciplina cadastrada. Comece adicionando suas disciplinas do período!</p>
+                Nenhuma disciplina cadastrada. Comece adicionando suas disciplinas do período!
             </div>
         {% endif %}
     </div>

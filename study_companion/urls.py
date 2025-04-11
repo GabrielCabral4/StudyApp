@@ -8,6 +8,7 @@ urlpatterns = [
     path('disciplinas/<int:pk>/editar', views.disciplina_update, name='disciplina_edit'),
     path('disciplinas/<int:pk>/deletar', views.disciplina_delete, name='disciplina_delete'),
     path('flashcards/', views.flashcards_list, name='flashcards'),
+    path('flashcards/nova/', views.flashcard_create, name='flashcard_add'),
     path('anotacoes/', views.anotacoes_list, name='anotacoes'),
     path('calendario/', views.calendario_view, name='calendario'),
     path('refeicoes/', views.refeicoes_list, name='refeicoes'),

@@ -1,48 +1,51 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
+{% load flashcard_extras %}
 
-{% block page_title %}Flashcards{% endblock %}
+{% block background %}
+    <div class="flashcards"></div>
+{% endblock %}
+
+{% block page_title %}
+    <h1 class="page-title">
+        <span class="material-symbols-outlined">style</span>
+        Flashcards
+    </h1>
+{% endblock %}
 
 {% block content_actions %}
-<a href="#" class="btn-primary">Novo Flashcard</a>
+    <a href="{% url 'flashcard_add' %}" class="icon-expand">
+        <span>Novo Flashcard</span>
+    </a>
 {% endblock %}
 
 {% block content_body %}
-<div class="filter-bar">
-    <select id="disciplina-filter">
-        <option value="">Todas as disciplinas</option>
-        {% for disciplina in disciplinas %}
-        <option value="{{ disciplina.id }}" {% if request.GET.disciplina == disciplina.id|stringformat:"i" %}selected{% endif %}>{{ disciplina.nome }}</option>
-        {% endfor %}
-    </select>
-    <select id="dificuldade-filter">
-        <option value="">Todas as dificuldades</option>
-        <option value="1">Fácil</option>
-        <option value="2">Médio</option>
-        <option value="3">Difícil</option>
-    </select>
-</div>
-
 <div class="flashcards-container">
-    {% if flashcards %}
-        {% for flashcard in flashcards %}
-        <div class="flashcard" data-disciplina="{{ flashcard.disciplina.id }}" data-dificuldade="{{ flashcard.dificuldade }}">
-            <div class="flashcard-inner">
-                <div class="flashcard-front">
-                    <p>{{ flashcard.pergunta }}</p>
-                    <small class="flashcard-info">{{ flashcard.disciplina.nome }}</small>
+    <div class="carousel-wrapper">
+        <div class="flashcard-carousel" id="flashcard-carousel">
+            {% if flashcards %}
+                {% for flashcard in flashcards %}
+                    <div class="flashcard-item" data-disciplina="{{ flashcard.disciplina.id }}" data-dificuldade="{{ flashcard.dificuldade }}">
+                        <div class="flashcard-inner flashcard-{{ flashcard.dificuldade|get_dificuldade_class }}" onclick="this.classList.toggle('flipped')">
+                            <div class="flashcard-front">
+                                <div class="flashcard-content">
+                                    <small class="flashcard-info">{{ flashcard.disciplina.nome }}</small>
+                                    <p>{{ flashcard.pergunta }}</p>
+                                </div>
+                            </div>
+                            <div class="flashcard-back">
+                                <p>{{ flashcard.resposta }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <span class="material-symbols-outlined">style</span>
+                    <p>Nenhum flashcard encontrado. Adicione flashcards para começar a estudar!</p>
                 </div>
-                <div class="flashcard-back">
-                    <p>{{ flashcard.resposta }}</p>
-                </div>
-            </div>
+            {% endif %}
         </div>
-        {% endfor %}
-    {% else %}
-        <div class="empty-state">
-            <span class="material-symbols-outlined">style</span>
-            <p>Nenhum flashcard encontrado. Adicione flashcards para começar a estudar!</p>
-        </div>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

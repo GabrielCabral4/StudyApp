@@ -7,10 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudyLife Partner</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
 </head>
 <body>
-
+    {% block background %}{% endblock %}
     <div class="sidebar">
         <div class="logo">
             <span class="material-symbols-outlined">school</span>
@@ -53,6 +55,38 @@
         {% block content %}
         {% endblock %}
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const carousel = document.getElementById('flashcard-carousel');
+        let index = 0;
+    
+        function rotateCarousel() {
+            const items = document.querySelectorAll('.flashcard-item');
+            if (!items.length) return;
+    
+            index = (index + 1) % items.length;
+            const offset = -index * 320; 
+            carousel.style.transform = `translateX(${offset}px)`;
+        }
+
+        setInterval(rotateCarousel, 4000); 
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('.flashcard-item').forEach(item => {
+            const dificuldade = parseInt(item.dataset.dificuldade);
+            const inner = item.querySelector('.flashcard-inner');
+
+            if (dificuldade === 1) {
+                inner.style.backgroundColor = '#d4edda';
+            } else if (dificuldade === 2) {
+                inner.style.backgroundColor = '#fff3cd';
+            } else if (dificuldade === 3) {
+                inner.style.backgroundColor = '#f8d7da';
+            }
+        });
+    </script>
 
     <script src="{% static 'js/script.js' %}"></script>
 </body>

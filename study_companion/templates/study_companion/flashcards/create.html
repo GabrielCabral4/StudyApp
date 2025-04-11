@@ -1,0 +1,12 @@
+{% extends "study_companion/base_content.html" %}
+
+{% block page_title %}Novo Flashcard{% endblock %}
+
+{% block content_body %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-primary">Salvar</button>
+    <a href="{% url 'flashcards' %}" class="btn">Cancelar</a>
+</form>
+{% endblock %}

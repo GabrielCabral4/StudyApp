@@ -7,7 +7,8 @@ class Disciplina(models.Model):
     nome = models.CharField(max_length=100)
     periodo = models.IntegerField(choices=PERIODO_CHOICES)
     descricao = models.TextField(blank=True)
-
+    cor_hex = models.CharField(max_length=7, default="#FFFFFF")
+    
     def __str__(self):
         return f"{self.nome} ({self.periodo}° período)"
     

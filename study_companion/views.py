@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
-from .forms import DisciplinaForm
+from .forms import DisciplinaForm, FlashcardForm
 
 
 def home(request):
@@ -69,19 +69,35 @@ def disciplina_delete(request, pk):
         return redirect('disciplinas')
     return render(request, 'study_companion/disciplinas/delete.html', {'disciplina': disciplina})
 
+
 def flashcards_list(request):
     disciplinas = Disciplina.objects.all()
     disciplina_id = request.GET.get('disciplina')
+    dificuldade = request.GET.get('dificuldade')
+
+    flashcards = Flashcard.objects.all()
 
     if disciplina_id:
-        flashcards = Flashcard.objects.filter(disciplina_id=disciplina_id)
-    else:
-        flashcards = Flashcard.objects.all()
+        flashcards = flashcards.filter(disciplina_id=disciplina_id)
+    
+    if dificuldade:
+        flashcards = flashcards.filter(dificuldade=dificuldade)
 
     return render(request, 'study_companion/flashcards/list.html', {
         'flashcards': flashcards,
         'disciplinas': disciplinas
     })
+
+
+def flashcard_create(request):
+    if request.method == 'POST':
+        form = FlashcardForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('flashcards')
+    else:
+        form = FlashcardForm()
+    return render(request, 'study_companion/flashcards/create.html', {'form': form})
 
 def anotacoes_list(request):
     disciplinas = Disciplina.objects.all()
