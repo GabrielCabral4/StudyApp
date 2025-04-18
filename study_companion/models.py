@@ -18,7 +18,7 @@ class Flashcard(models.Model):
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, related_name='flashcard')
     pergunta = models.TextField()
     resposta = models.TextField()
-    dificuldade = models.IntegerField(choices=[(1, 'Fácil'), (2, 'Médio'), (3, 'Difícil')])
+    dificuldade = models.IntegerField(choices=[(1, 'facil'), (2, 'medio'), (3, 'dificil')])
     ultima_revisao = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

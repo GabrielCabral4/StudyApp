@@ -20,44 +20,75 @@
 {% endblock %}
 
 {% block content_body %}
+<div class="chips-rapidos">
+    <span class="chip chip-filtro" data-filtro-dificuldade="facil">✅ Fácil</span>
+    <span class="chip chip-filtro" data-filtro-dificuldade="medio">⚠️ Médio</span>
+    <span class="chip chip-filtro" data-filtro-dificuldade="dificil">🔥 Difícil</span>
+</div>
+
+<div id="modo-estudo-config">
+    <h3>Monte seu deck personalizado</h3>
+    <div class="filtros-estudo">
+        <p>Disciplinas:</p>
+        <div class="chip-group" id="disciplinas-chips">
+            {% for disciplina in disciplinas %}
+                <span class="chip chip-disciplinas" data-id="{{ disciplina.id }}">{{ disciplina.nome }}</span>
+            {% endfor %}
+        </div>
+
+        <p>Dificuldades:</p>
+        <div class="chip-group" id="dificuldades-chips">
+            <span class="chip chip-dificuldades" data-id="facil">Fácil</span>
+            <span class="chip chip-dificuldades" data-id="medio">Médio</span>
+            <span class="chip chip-dificuldades" data-id="dificil">Difícil</span>
+        </div>
+    </div>
+
+    <button id="iniciar-revisao" class="botao-revisao">Iniciar Revisão</button>
+</div>
+
 <div class="flashcards-container">
-    <div class="carousel-wrapper">
-        <div class="flashcard-carousel" id="flashcard-carousel">
-            {% if flashcards %}
-                {% for flashcard in flashcards %}
-                    <div class="flashcard-item" data-disciplina="{{ flashcard.disciplina.id }}" data-dificuldade="{{ flashcard.dificuldade }}">
-                        <div class="flashcard-inner flashcard-{{ flashcard.dificuldade|get_dificuldade_class }}" onclick="this.classList.toggle('flipped')">
-                            <div class="flashcard-front">
-                                <div class="flashcard-content">
-                                    <small class="flashcard-info">{{ flashcard.disciplina.nome }}</small>
-                                    <p>{{ flashcard.pergunta }}</p>
+    <div class="carousel-container">
+        <button id="btn-prev" class="carousel-btn">⏪</button>
+        <div class="carousel-wrapper">
+            <div class="flashcard-carousel" id="flashcard-carousel">
+                {% if flashcards %}
+                    {% for flashcard in flashcards %}
+                        <div class="flashcard-item" data-disciplina="{{ flashcard.disciplina.id }}" data-dificuldade="{{ flashcard.dificuldade }}">
+                            <div class="flashcard-inner flashcard-{{ flashcard.dificuldade|get_dificuldade_class }}" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-content">
+                                        <small class="flashcard-info">{{ flashcard.disciplina.nome }}</small>
+                                        <p>{{ flashcard.pergunta }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flashcard-back">
-                                <p>{{ flashcard.resposta }}</p>
-                            
-                                <div class="flashcard-actions">
-                                    <a href="{% url 'flashcard_edit' flashcard.id %}" class="btn-flashcard edit">
-                                        <span class="material-symbols-outlined">edit</span>
-                                    </a>
-                                    <form action="{% url 'flashcard_delete' flashcard.id %}" method="post" style="display:inline;">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn-flashcard delete" onclick="return confirm('Tem certeza que deseja excluir este flashcard?')">
-                                            <span class="material-symbols-outlined">delete</span>
-                                        </button>
-                                    </form>
+                                <div class="flashcard-back">
+                                    <p>{{ flashcard.resposta }}</p>
+                                    
+                                    <div class="flashcard-actions">
+                                        <a href="{% url 'flashcard_edit' flashcard.id %}" class="btn-flashcard edit">
+                                            <span class="material-symbols-outlined">edit</span>
+                                        </a>
+                                        <form action="{% url 'flashcard_delete' flashcard.id %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-flashcard delete" onclick="return confirm('Tem certeza que deseja excluir este flashcard?')">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">style</span>
+                        <p>Nenhum flashcard encontrado. Adicione flashcards para começar a estudar!</p>
                     </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state">
-                    <span class="material-symbols-outlined">style</span>
-                    <p>Nenhum flashcard encontrado. Adicione flashcards para começar a estudar!</p>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
+        <button id="btn-next" class="carousel-btn">⏩</button>
     </div>
 </div>
 {% endblock %}
