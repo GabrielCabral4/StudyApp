@@ -21,9 +21,9 @@
 
 {% block content_body %}
 <div class="chips-rapidos">
-    <span class="chip chip-filtro" data-filtro-dificuldade="facil">✅ Fácil</span>
-    <span class="chip chip-filtro" data-filtro-dificuldade="medio">⚠️ Médio</span>
-    <span class="chip chip-filtro" data-filtro-dificuldade="dificil">🔥 Difícil</span>
+    <span class="chip chip-filtro" data-filtro-dificuldade="1">✅ Fácil</span>
+    <span class="chip chip-filtro" data-filtro-dificuldade="2">⚠️ Médio</span>
+    <span class="chip chip-filtro" data-filtro-dificuldade="3">🔥 Difícil</span>    
 </div>
 
 <div id="modo-estudo-config">
@@ -38,9 +38,9 @@
 
         <p>Dificuldades:</p>
         <div class="chip-group" id="dificuldades-chips">
-            <span class="chip chip-dificuldades" data-id="facil">Fácil</span>
-            <span class="chip chip-dificuldades" data-id="medio">Médio</span>
-            <span class="chip chip-dificuldades" data-id="dificil">Difícil</span>
+            <span class="chip chip-dificuldades" data-id="1">Fácil</span>
+            <span class="chip chip-dificuldades" data-id="2">Médio</span>
+            <span class="chip chip-dificuldades" data-id="3">Difícil</span>
         </div>
     </div>
 
@@ -54,7 +54,9 @@
             <div class="flashcard-carousel" id="flashcard-carousel">
                 {% if flashcards %}
                     {% for flashcard in flashcards %}
-                        <div class="flashcard-item" data-disciplina="{{ flashcard.disciplina.id }}" data-dificuldade="{{ flashcard.dificuldade }}">
+                        <div class="flashcard-item" 
+                        data-disciplina="{{ flashcard.disciplina.id }}" 
+                        data-dificuldade="{{ flashcard.dificuldade }}">
                             <div class="flashcard-inner flashcard-{{ flashcard.dificuldade|get_dificuldade_class }}" onclick="this.classList.toggle('flipped')">
                                 <div class="flashcard-front">
                                     <div class="flashcard-content">

@@ -1,92 +1,185 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Menu toggle responsivo (mantido do seu código original)
-    const menuToggle = document.createElement('div');
-    menuToggle.classList.add('menu-toggle');
-    menuToggle.innerHTML = 'menu';
-    document.body.appendChild(menuToggle);
+document.addEventListener('DOMContentLoaded', () => {
+  // ─── VARIÁVEIS GLOBAIS ──────────────────────────────────────────────────
+  let quickActive = null;
+  let currentCarouselCleanup = null;
   
-    menuToggle.addEventListener('click', function () {
-      document.querySelector('.sidebar').classList.toggle('active');
-      document.querySelector('.content').classList.toggle('pushed');
-    });
-  
-    if (window.innerWidth <= 768) {
-      const menuItems = document.querySelectorAll('.menu-content li a');
-      menuItems.forEach(item => {
-        item.addEventListener('click', function () {
-          document.querySelector('.sidebar').classList.remove('active');
-          document.querySelector('.content').classList.remove('pushed');
-        });
-      });
+  // ─── MENU TOGGLE ───────────────────────────────────────────────────────
+  const menuToggle = document.createElement('div');
+  menuToggle.classList.add('menu-toggle');
+  menuToggle.innerHTML = 'menu';
+  document.body.appendChild(menuToggle);
+
+  menuToggle.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.toggle('active');
+    document.querySelector('.content').classList.toggle('pushed');
+  });
+
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.menu-content li a').forEach(a =>
+      a.addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.remove('active');
+        document.querySelector('.content').classList.remove('pushed');
+      })
+    );
+  }
+
+  // ─── CARROSSEL (VERSÃO CORRIGIDA) ──────────────────────────────────────
+  function initCarousel() {
+    if (currentCarouselCleanup) {
+        currentCarouselCleanup();
     }
-  
-    // Implementação robusta para o carrossel centralizado
-    function initCarousel() {
-        const flashcards = document.querySelectorAll('.flashcard-item');
-        const totalFlashcards = flashcards.length;
+
+    const carousel = document.getElementById('flashcard-carousel');
+    const wrapper = document.querySelector('.carousel-wrapper');
+    const cards = Array.from(document.querySelectorAll('.flashcard-item.visivel'));
+    const totalCards = cards.length;
+
+    if (totalCards === 0) {
+        carousel.style.transform = 'translateX(0)';
+        return;
+    }
+
+    const cardWidth = cards[0].offsetWidth;
+    const gap = parseInt(getComputedStyle(carousel).gap) || 20;
+    let currentIndex = 0;
+    let wrapperWidth = wrapper.offsetWidth;
+    let initialOffset = (wrapperWidth - cardWidth) / 2;
+
+    // Desativa temporariamente a transição para o posicionamento inicial
+    carousel.style.transition = 'none';
+    
+    function updateCarousel() {
+        currentIndex = Math.max(0, Math.min(currentIndex, totalCards - 1));
+        const newPosition = -currentIndex * (cardWidth + gap) + initialOffset;
         
-        if (totalFlashcards === 0) return; // Sair se não houver flashcards
+        carousel.style.transform = `translateX(${newPosition}px)`;
         
-        let currentIndex = 0;
-        const carousel = document.querySelector('#flashcard-carousel');
-        const carouselWrapper = document.querySelector('.carousel-wrapper');
-        const cardWidth = 300; // Largura de cada flashcard
-        const cardGap = 20;    // Espaçamento entre cards
+        cards.forEach((card, idx) => {
+            card.classList.toggle('active', idx === currentIndex);
+        });
         
-        // Função para centralizar perfeitamente o card atual
-        function centerCard() {
-            // Remover classe active de todos os cards
-            flashcards.forEach(card => card.classList.remove('active'));
-            
-            // Adicionar classe active ao card atual
-            flashcards[currentIndex].classList.add('active');
-            
-            // Calcular o centro da tela
-            const wrapperWidth = carouselWrapper.offsetWidth;
-            const halfWrapperWidth = wrapperWidth / 2;
-            
-            // Calcular a posição do card atual no carrossel sem transformação
-            const cardPosition = currentIndex * (cardWidth + cardGap);
-            
-            // Calcular quanto precisamos deslocar para centralizar exatamente este card
-            const centerOffset = halfWrapperWidth - (cardWidth / 2);
-            const translateAmount = cardPosition - centerOffset;
-            
-            // Aplicar a transformação precisa
-            carousel.style.transform = `translateX(-${translateAmount}px)`;
-        }
-        
-        // Configurar botões de navegação
+        updateButtons();
+    }
+
+    function updateButtons() {
         const btnPrev = document.getElementById('btn-prev');
         const btnNext = document.getElementById('btn-next');
         
-        if (btnPrev) {
-            btnPrev.addEventListener('click', function() {
-                currentIndex = (currentIndex - 1 + totalFlashcards) % totalFlashcards;
-                centerCard();
-            });
+        if (totalCards <= 1) {
+            btnPrev?.classList.add('disabled');
+            btnNext?.classList.add('disabled');
+        } else {
+            btnPrev?.classList.toggle('disabled', currentIndex === 0);
+            btnNext?.classList.toggle('disabled', currentIndex >= totalCards - 1);
         }
-        
-        if (btnNext) {
-            btnNext.addEventListener('click', function() {
-                currentIndex = (currentIndex + 1) % totalFlashcards;
-                centerCard();
-            });
+    }
+
+    function handlePrevClick() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            carousel.style.transition = 'transform 0.3s ease';
+            updateCarousel();
         }
-        
-        // Para garantir que a centralização aconteça assim que tudo estiver carregado
-        window.addEventListener('load', centerCard);
-        
-        // Também centralizar logo após a inicialização do DOM
-        centerCard();
-        
-        // E uma última tentativa após um pequeno atraso, caso algo ainda esteja sendo carregado
-        setTimeout(centerCard, 200);
-        
-        // Ajustar ao redimensionar a janela
-        window.addEventListener('resize', centerCard);
     }
     
-    // Inicializar o carrossel
+    function handleNextClick() {
+        if (currentIndex < totalCards - 1) {
+            currentIndex++;
+            carousel.style.transition = 'transform 0.3s ease';
+            updateCarousel();
+        }
+    }
+
+    function handleResize() {
+        wrapperWidth = wrapper.offsetWidth;
+        initialOffset = (wrapperWidth - cardWidth) / 2;
+        carousel.style.transition = 'none';
+        updateCarousel();
+        setTimeout(() => {
+            carousel.style.transition = 'transform 0.3s ease';
+        }, 50);
+    }
+
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    btnPrev?.addEventListener('click', handlePrevClick);
+    btnNext?.addEventListener('click', handleNextClick);
+
+    window.addEventListener('resize', handleResize);
+
+    // Posicionamento inicial sem animação
+    updateCarousel();
+    
+    // Reativa a transição após um pequeno delay
+    setTimeout(() => {
+        carousel.style.transition = 'transform 0.3s ease';
+    }, 50);
+
+    currentCarouselCleanup = () => {
+        btnPrev?.removeEventListener('click', handlePrevClick);
+        btnNext?.removeEventListener('click', handleNextClick);
+        window.removeEventListener('resize', handleResize);
+    };
+}
+
+  // ─── QUICK FILTERS ────────────────────────────────────────────────────
+  document.querySelectorAll('.chip-filtro').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const lvl = chip.dataset.filtroDificuldade;
+      
+      if (quickActive === chip) {
+        chip.classList.remove('selecionado');
+        quickActive = null;
+        document.querySelectorAll('.flashcard-item').forEach(c => {
+          c.classList.add('visivel');
+        });
+      } else {
+        document.querySelectorAll('.chip-filtro').forEach(c => c.classList.remove('selecionado'));
+        chip.classList.add('selecionado');
+        quickActive = chip;
+        
+        document.querySelectorAll('.flashcard-item').forEach(card => {
+          const cardVisible = card.dataset.dificuldade === lvl;
+          card.classList.toggle('visivel', cardVisible);
+        });
+      }
+      initCarousel();
+    });
+  });
+
+  // ─── DECK PERSONALIZADO ──────────────────────────────────────────────
+  document.querySelectorAll('.chip-disciplinas, .chip-dificuldades').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('selecionado');
+      
+      if (quickActive) {
+        quickActive.classList.remove('selecionado');
+        quickActive = null;
+      }
+    });
+  });
+
+  // Botão "Iniciar Revisão"
+  document.getElementById('iniciar-revisao')?.addEventListener('click', () => {
+    const selDiscs = Array.from(document.querySelectorAll('.chip-disciplinas.selecionado'))
+      .map(c => c.dataset.id);
+    const selDiffs = Array.from(document.querySelectorAll('.chip-dificuldades.selecionado'))
+      .map(c => c.dataset.id);
+    
+    document.querySelectorAll('.flashcard-item').forEach(card => {
+      const cardDisc = card.dataset.disciplina;
+      const cardDiff = card.dataset.dificuldade;
+      
+      const okDisc = selDiscs.length === 0 || selDiscs.includes(cardDisc);
+      const okDiff = selDiffs.length === 0 || selDiffs.includes(cardDiff);
+      
+      card.classList.toggle('visivel', okDisc && okDiff);
+    });
+
     initCarousel();
+  });
+
+  // ─── INICIALIZAÇÃO ──────────────────────────────────────────────────
+  document.querySelectorAll('.flashcard-item').forEach(c => c.classList.add('visivel'));
+  initCarousel();
 });
