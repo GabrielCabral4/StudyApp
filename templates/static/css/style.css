@@ -129,24 +129,6 @@ body {
     transition: margin-left 0.3s ease-in-out;
 }
 
-@media (max-width: 768px) {
-    .sidebar {
-        width: 0;
-    }
-    
-    .sidebar.active {
-        width: 220px;
-    }
-    
-    .content {
-        margin-left: 0;
-    }
-    
-    .content.pushed {
-        margin-left: 220px;
-    }
-}
-
 .icon-expand {
     cursor: pointer;
     position: relative;
@@ -319,38 +301,8 @@ body {
     font-size: 2.2rem;
     color: #0d3879;
 }
-.carousel-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    align-items: center;
-    margin: 2rem 0;
-    overflow: hidden;
-}
-
-#flashcard-carousel {
-    display: flex;
-    gap: 20px;
-    transition: transform 0.3s ease;
-    will-change: transform;
-    position: relative;
-    transform: translate(0);
-    backface-visibility: hidden;
-}
-#flashcard-carousel.centralizado {
-    transition: transform 0.5s ease-in-out;
-}
-.flashcards-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 2rem 0;
-}
-
-.flashcards {
+/* ========== Estilos do Background ========== */
+.flashcards-bg {
     position: fixed;
     top: 0;
     left: 0;
@@ -366,54 +318,157 @@ body {
     pointer-events: none;
 }
 
-.flashcard.active {
+/* ========== Estilos dos Chips ========== */
+.quick-filter-chips,
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+    justify-content: center;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #f5f5f5;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.chip:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.chip:active {
+    transform: scale(0.97);
+}
+
+.chip.selected {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4);
+}
+
+/* ========== Área de Configuração ========== */
+.study-mode-config {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.study-mode-config h3 {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #333;
+}
+
+.filter-section p {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.review-button {
     display: block;
+    margin: 20px auto 0;
+    padding: 12px 24px;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
 }
 
-.flashcard.flip .flashcard-inner {
-    transform: rotateY(180deg);
+.review-button:hover {
+    background-color: #43A047;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.flashcard-back {
-    transform: rotateY(180deg);
+.review-button:active {
+    transform: scale(0.97);
 }
 
-.carousel-viewport {
+/* ========== Carrossel de Flashcards ========== */
+.flashcards-wrapper {
     width: 100%;
-    overflow-x: hidden; 
+    margin: 32px 0;
+    position: relative;
 }
 
-.carousel-wrapper {
+.carousel-container {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    height: 280px;
+    margin: 2rem 0;
     overflow: hidden;
+}
+
+.carousel-viewport {
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    display: flex;
+    position: hidden;
+    overflow: hidden;
+}
+
+.flashcard-carousel {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease;
+    will-change: transform;
     position: relative;
 }
 
-.carousel-wrapper::-webkit-scrollbar {
-    display: none;
-}
-
+/* ========== Botões de navegação ========== */
 .carousel-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
     border: none;
-    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    padding: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-    color: #333;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    pointer-events: auto;
 }
 
-.carousel-btn[style*="display: none"] {
-    opacity: 0;
-    pointer-events: none;
+.carousel-btn:hover {
+    background-color: #f8f8f8;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.carousel-btn:active {
+    transform: translateY(-50%) scale(0.95);
 }
 
 .carousel-btn.disabled {
@@ -422,280 +477,224 @@ body {
     pointer-events: none;
 }
 
-#btn-prev { left: 10px; }
-#btn-next { right: 10px; }
-.carousel-btn:hover { opacity: 1; }
+#prev-button {
+    left: 12px;
+}
 
+#next-button {
+    right: 12px;
+}
+
+/* ========== Flashcard Item ========== */
 .flashcard-item {
-    flex: 0 0 auto;
-    width: 300px;
-    height: 200px;
-    perspective: 1000px;
+    flex: 0 0 320px;
     position: relative;
-    transition: transform 0.2s ease;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    margin: 0 15px;
-    scroll-snap-type: center;
-    transform: translateZ(0);
+    height: 220px;
+    perspective: 1000px;
+    transition: all 0.3s ease;
+    transform: scale(0.9);
+    margin: 0 20px;
 }
-.flashcard-item:not(.visivel) {
-    display: none !important;
+
+.flashcard-item.visible {
+    opacity: 1;
+    pointer-events: auto;
 }
+
+.flashcard-item.active {
+    z-index: 2;
+    transform: scale(1);
+    opacity: 1;
+}
+
+.flashcard-item.prev,
+.flashcard-item.next {
+    position: absolute;
+    width: calc(100% - 120px);
+    opacity: 0.7;
+}
+
+.flashcard-item.prev {
+    left: 0;
+    transform: translateX(-20%) scale(0.9);
+}
+
+.flashcard-item.next {
+    right: 0;
+    transform: translateX(20%) scale(0.9);
+}
+
 .flashcard-item.hidden {
     opacity: 0;
-    transform: translateX(30px);
     pointer-events: none;
-    position: absolute;
-    z-index: 0;
 }
 
-.flashcard-item.visivel {
-    opacity: 1;
-    transform: translateX(0);
-    position: relative;
-    pointer-events: auto;
-    z-index: 1;
-    animation: cardEnter 0.4s ease-in-out;
-    display: block !important;
-}
-
-@keyframes cardEnter {
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
+/* ========== Flashcard Inner ========== */
 .flashcard-inner {
     width: 100%;
     height: 100%;
-    max-width: 100%;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
     transform-style: preserve-3d;
     transition: transform 0.6s;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     cursor: pointer;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    perspective: 1000px;
+    pointer-events: auto;
 }
 
 .flashcard-inner.flipped {
     transform: rotateY(180deg);
 }
 
-.flashcard-inner.flipped:hover .flashcard-actions {
-    opacity: 1;
-}
-
-.flashcard-front, .flashcard-back {
+/* ========== Flashcard Face (frente e verso) ========== */
+.flashcard-front,
+.flashcard-back {
     position: absolute;
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
+    border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
-    font-size: 1rem;
-    border-radius: 12px;
-    box-sizing: border-box;
-    overflow: hidden;
-    flex-direction: column;
-    justify-self: center;
-    align-items: center;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .flashcard-front {
-    background: #f9f9f9;
+    background-color: #f9f9f9;
 }
 
 .flashcard-back {
-    background:  #e0f7fa;
+    background-color: #f9f9f9;
     transform: rotateY(180deg);
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    padding: 1rem;
-    animation: fadeSlideIn 0.4s ease-in-out;
 }
 
-.flashcard-back p {
-    margin-bottom: 1rem;
-    font-size: 1rem;
+/* ========== Cores por dificuldade ========== */
+.difficulty-facil .flashcard-front {
+    background-color: #d4edda;
+    border-left: 6px solid #28a745;
 }
 
-.filtros-flashcards {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    justify-content: center;
+.difficulty-medio .flashcard-front {
+    background-color: #fff3cd;
+    border-left: 6px solid #ffc107;
 }
 
-.filtros-flashcards select {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    background-color: #fff;
+.difficulty-dificil .flashcard-front {
+    background-color: #f8d7da;
+    border-left: 6px solid #dc3545;
 }
 
-.flashcard-item.active {
-    transform: scale(1.02);
-    filter: none;
-    opacity: 1;
-    z-index: 2;
-}
-
-.chips-filtros {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1rem 0;
-}
-
-.chip-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.chip {
-    display: inline-block;
-    padding: 0.4rem 0.8rem;
-    margin: 4px;
-    background-color: #f0f0f0;
-    border-radius: 999px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #333;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    user-select: none;
-}
-  
-.chip:hover {
-    background-color: #e0e0e0;
-    transform: translateY(-2px);
-}
-  
-.chip:active {
-    transform: scale(0.97);
-    background-color: #d0d0d0;
-}
-  
-.chip.selecionado {
-    background-color: #007bff !important;
-    color: white !important;
-}
-  
-.botao-revisao {
-    padding: 0.6rem 1.2rem;
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 999px;
-    color: #333;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-  
-.botao-revisao:hover {
-    background-color: #69d900;
-    transform: translateY(-2px);
-}
-  
-.botao-revisao:active {
-    transform: scale(0.97);
-}
-
-@keyframes fadeSlideIn {
-    from {
-        opacity: 0;
-        transform: rotateY(180deg) translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: rotateY(180deg) translateY(0);
-    }
-}
-
+/* ========== Conteúdo do Flashcard ========== */
 .flashcard-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
 }
 
-.flashcard-info {
-    font-weight: bold;
-    font-size: 0.85rem;
+.flashcard-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
     color: #555;
+    margin-bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 4px 12px;
+    border-radius: 12px;
 }
 
-.flashcard-facil .flashcard-front {
-    background-color: #d4edda;
+.flashcard-question,
+.flashcard-answer {
+    font-size: 1.2rem;
+    margin: 0;
+    line-height: 1.4;
 }
 
-.flashcard-medio .flashcard-front {
-    background-color: #fff3cd;
+.flashcard-flip-hint {
+    position: absolute;
+    bottom: 12px;
+    font-size: 0.8rem;
+    color: #777;
+    opacity: 0.7;
 }
 
-.flashcard-dificil .flashcard-front {
-    background-color: #f8d7da;
-}
+/* ========== Ações do Flashcard ========== */
 .flashcard-actions {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: auto;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease;
+    gap: 16px;
+    margin-top: 20px;
 }
 
-.btn-flashcard {
-    background-color: transparent;
+.flashcard-btn {
+    background: none;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    font-size: 1.5rem;
-    color: #333;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
 }
 
-.btn-flashcard.edit {
-    color: #1a1904;
+.flashcard-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
-.btn-flashcard.edit:hover {
-    background-color: rgba(13, 110, 253, 0.1);
+.flashcard-btn.edit {
+    color: #007bff;
 }
 
-.btn-flashcard.delete {
+.flashcard-btn.delete {
     color: #dc3545;
 }
 
-.btn-flashcard.delete:hover {
-    background-color: rgba(220, 53, 69, 0.1);
+/* ========== Paginação ========== */
+.carousel-pagination {
+    text-align: center;
+    margin-top: 16px;
+    font-weight: 500;
+    color: #555;
 }
 
-.flashcard-back:hover .flashcard-actions {
-    opacity: 1;
-    transform: translateY(0);
+/* ========== Estado vazio ========== */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    height: 220px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.empty-state .material-symbols-outlined {
+    font-size: 48px;
+    color: #888;
+    margin-bottom: 16px;
+}
+
+/* ========== Media Queries ========== */
+@media (max-width: 768px) {
+    .carousel-viewport {
+        width: 90%;
+    }
+    
+    .flashcard-item {
+        width: 280px;
+        height: 200px;
+        flex: 0 0 280px;
+        margin: 0 15px;
+    }
+    
+    .study-mode-config {
+        padding: 16px;
+    }
 }
 
 .form-container {
