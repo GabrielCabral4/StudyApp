@@ -1,5 +1,5 @@
 from django import forms
-from .models import Disciplina, Flashcard, Anotacao
+from .models import Disciplina, Flashcard, Anotacao, EventoCalendario
 from ckeditor.widgets import CKEditorWidget
 
 class DisciplinaForm(forms.ModelForm):
@@ -27,4 +27,13 @@ class AnotacaoForm(forms.ModelForm):
             'disciplina': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'conteudo': CKEditorWidget(), 
+        }
+
+class EventoCalendarioForm(forms.ModelForm):
+    class Meta:
+        model = EventoCalendario
+        fields = ['titulo', 'data', 'tipo', 'disciplina', 'descricao']
+        widgets = {
+            'data': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'descricao': forms.Textarea(attrs={'rows': 3}),
         }

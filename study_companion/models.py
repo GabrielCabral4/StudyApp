@@ -55,7 +55,8 @@ class EventoCalendario(models.Model):
     ])
     disciplina = models.ForeignKey(Disciplina, null=True, blank=True, on_delete=models.SET_NULL, related_name='eventos')
     descricao = models.TextField(blank=True)
-
+    concluido = models.BooleanField(default=False)
+    
     def __str__(self):
         return f"{self.titulo} - {self.data.strftime('%d/%m/%Y %H:%M')}"
     

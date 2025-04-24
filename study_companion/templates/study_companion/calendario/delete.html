@@ -1,0 +1,15 @@
+{% extends "study_companion/base_content.html" %}
+{% block page_title %}Excluir Evento{% endblock %}
+
+{% block content_body %}
+<div class="delete-container">
+    <h2>Tem certeza que deseja excluir este evento?</h2>
+    <p><strong>{{ evento.titulo }}</strong> – {{ evento.data|date:"d/m/Y H:i" }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Excluir</button>
+        <a href="{% url 'calendario' %}" class="btn-cancel">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

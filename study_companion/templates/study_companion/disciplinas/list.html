@@ -35,28 +35,7 @@
         </select>        
         <input type="text" name="search" id="search-input" placeholder="Buscar disciplina..." value="{{ request.GET.search }}">
     </form>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const periodoSelect = document.getElementById('periodo-filter');
-            const searchInput = document.getElementById('search-input');
-        
-            function atualizarURL() {
-                const params = new URLSearchParams();
-                if (periodoSelect.value) params.append('periodo', periodoSelect.value);
-                if (searchInput.value) params.append('search', searchInput.value);
-                window.location.href = '?' + params.toString();
-            }
-        
-            periodoSelect.addEventListener('change', atualizarURL);
-            searchInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    atualizarURL();
-                }
-            });
-        });
-        </script>
-
+   
     <div class="disciplines-grid">
         {% if disciplinas %}
             {% for disciplina in disciplinas %}
@@ -90,5 +69,27 @@
             </div>
         {% endif %}
     </div>
-</div>
+</div> 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const periodoSelect = document.getElementById('periodo-filter');
+        const searchInput = document.getElementById('search-input');
+        
+        function atualizarURL() {
+            const params = new URLSearchParams();
+            if (periodoSelect.value) params.append('periodo', periodoSelect.value);
+            if (searchInput.value) params.append('search', searchInput.value);
+            window.location.href = '?' + params.toString();
+        }
+        
+        periodoSelect.addEventListener('change', atualizarURL);
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                atualizarURL();
+            }
+        });
+    });
+</script>
 {% endblock %}

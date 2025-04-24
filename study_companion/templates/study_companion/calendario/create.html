@@ -1,0 +1,26 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}Novo Evento{% endblock %}
+
+
+{% block content_body %}
+<form method="POST" action="{% url 'evento_add' %}">
+    {% csrf_token %}
+    <div class="form-grid">
+        {% for field in form %}
+            <div class="form-group">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="form-error">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>    
+    <div class="modal-actions">
+        <button type="submit" class="btn-primary">Salvar</button>
+        <a href="{% url 'calendario' %}" class="btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

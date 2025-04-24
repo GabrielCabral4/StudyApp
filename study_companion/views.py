@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404    
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
-from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm
+from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm
 from django.views.decorators.http import require_POST
 from django.db.models import Q
+from calendar import monthrange
 
 
 def home(request):
@@ -178,26 +180,82 @@ def anotacao_delete(request, pk):
     anotacao.delete()
     return redirect('anotacoes')
 
+
 def calendario_view(request):
     hoje = datetime.now()
-    inicio_mes = hoje.replace(day=1)
+    mes_atual = hoje.month
+    ano_atual = hoje.year
 
-    if hoje.month == 12:
-        fim_mes = hoje.replace(year=hoje.year + 1, month=1, day=1) - timedelta(days=1)
-    else:
-        fim_mes = hoje.replace(month=hoje.month + 1, day=1) - timedelta(days=1)
+    mes = int(request.GET.get('mes', mes_atual))
+    ano = int(request.GET.get('ano', ano_atual))
+
+    proximos_eventos = EventoCalendario.objects.filter(
+        data__gte=hoje
+    ).order_by('data')
+
+    inicio_mes = datetime(ano, mes, 1)
+    _, dias_no_mes = monthrange(ano, mes)
+    fim_mes = datetime(ano, mes, dias_no_mes, 23, 59, 59)
 
     eventos = EventoCalendario.objects.filter(
         data__gte=inicio_mes,
         data__lte=fim_mes
     ).order_by('data')
 
+    dias_grid = []
+    for dia in range(1, dias_no_mes + 1):
+        data_dia = datetime(ano, mes, dia).date()
+        dias_grid.append({'day': dia, 'date': data_dia})
+
     return render(request, 'study_companion/calendario/view.html', {
         'eventos': eventos,
+        'proximos_eventos': proximos_eventos,
+        'dias_grid': dias_grid,
         'hoje': hoje,
-        'inicio_mes': inicio_mes,
-        'fim_mes': fim_mes
+        'mes_atual': mes,
+        'ano_atual': ano,
     })
+
+
+def evento_create(request):
+    if request.method == 'POST':
+        form = EventoCalendarioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('calendario')
+    else:
+        form = EventoCalendarioForm()
+
+    return render(request, 'study_companion/calendario/create.html', {
+        'form': form,
+    })
+
+def evento_update(request, pk):
+    evento = get_object_or_404(EventoCalendario, pk=pk)
+    if request.method == 'POST':
+        form = EventoCalendarioForm(request.POST, instance=EventoCalendario)
+        if form.is_valid():
+            form.save()
+            return redirect('calendario')
+    else:
+        form = EventoCalendarioForm(instance=EventoCalendario)
+    return render(request, 'study_companion/calendario/update.html', {'form': form, 'evento': evento})
+
+
+def evento_delete(request, pk):
+    evento = get_object_or_404(EventoCalendario, pk=pk)
+    if request.method == 'POST':
+        evento.delete()
+        return redirect('calendario')
+    return render(request, 'study_companion/calendario/delete.html', {'evento': evento})
+
+
+def evento_concluir(request, pk):
+    evento = get_object_or_404(EventoCalendario, pk=pk)
+    evento.concluido = True
+    evento.save()
+    messages.sucess(request, f"Evento '{evento.titulo}' marcado como concluído.")
+    return redirect('calendario')
 
 
 def refeicoes_list(request):

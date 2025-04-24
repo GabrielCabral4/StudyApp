@@ -1,17 +1,45 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
+{% load calendar_extras %}
 
-{% block page_title %}Calendário {% endblock %}
+{% block page_title %}
+    <h1 class="page-title">
+        <span class="material-symbols-outlined">calendar_month</span>
+        Calendário
+    </h1>
+{% endblock %}
+
+{% block background %}
+<div class="calendario"></div>
+{% endblock %}
 
 {% block content_actions %}
-<a href="#" class="btn-primary">Novo Evento</a>
+<a href="{% url 'evento_add' %}" class="icon-expand">
+    <span>Novo Evento</span>
+</a>
 {% endblock %}
 
 {% block content_body %}
+<div class="calendar-header-title">
+    <h2>{{ mes_atual|get_nome_mes }} {{ ano_atual }}</h2>
+</div>
+
+<div class="event-legend">
+    <h4>Legenda:</h4>
+    <ul>
+        <li><span class="event-dot prova"></span> Prova</li>
+        <li><span class="event-dot trabalho"></span> Trabalho</li>
+        <li><span class="event-dot plantao"></span> Plantão</li>
+        <li><span class="event-dot outro"></span> Outro</li>
+    </ul>
+</div>
+
+
 <div class="calendar-header">
-    <button id="prev-month" class="btn-icon"><span class="material-symbols-outlined">chevron_left</span></button>
-    <h2>{{ hoje|date:"F Y" }}</h2>
-    <button id="next-month" class="btn-icon"><span class="material-symbols-outlined">chevron_right</span></button>
+    <div id="calendar-controls" data-mes="{{ mes_atual }}" data-ano="{{ ano_atual }}">
+        <button id="prev-month">Anterior</button>
+        <button id="next-month">Próximo</button>
+    </div>    
 </div>
 
 <div class="calendar-grid">
@@ -22,44 +50,196 @@
     <div class="calendar-day day-header">Qui</div>
     <div class="calendar-day day-header">Sex</div>
     <div class="calendar-day day-header">Sáb</div>
-    
-    <!-- Aqui você precisará de lógica JavaScript para montar o calendário -->
-    <!-- Este é um placeholder para ilustração -->
-    {% for day in 1|rjust:"35" %}
-    <div class="calendar-day {% if forloop.counter == hoje.day %}today{% endif %}">
-        <div class="day-number">{{ forloop.counter }}</div>
-        <div class="day-events">
-            {% for evento in eventos %}
-                {% if evento.data.day == forloop.parentloop.counter %}
-                <div class="event-dot" data-event-id="{{ evento.id }}" data-event-title="{{ evento.titulo }}" data-event-type="{{ evento.tipo }}"></div>
-                {% endif %}
-            {% endfor %}
+
+    {% for dia in dias_grid %}
+        <div class="calendar-day {% if dia.date == hoje.date %}today{% endif %}">
+            <div class="day-number">{{ dia.day }}</div>
+            <div class="day-events">
+                {% for evento in eventos %}
+                    {% if evento.data|date:"Y-m-d" == dia.date|date:"Y-m-d" %}
+                        <div class="event-dot {{ evento.tipo }} {% if evento.concluido %}concluido{% endif %}"
+                            data-title="{{ evento.titulo }}"
+                            data-hora="{{ evento.data|date:'H:i' }}"
+                            data-tipo="{{ evento.get_tipo_display }}"
+                            data-desc="{{ evento.descricao|default_if_none:'' }}"
+                            data-edit-url="{% url 'evento_edit' evento.id %}"
+                            data-delete-url="{% url 'evento_delete' evento.id %}"
+                            data-concluir-url="{% url 'evento_concluir' evento.pk %}">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
     {% endfor %}
 </div>
 
 <div class="upcoming-events">
     <h3>Próximos Eventos</h3>
     <ul class="event-list">
-        {% for evento in eventos %}
-            {% if evento.data >= hoje %}
+        {% for evento in proximos_eventos %}
             <li class="event-item {{ evento.tipo }}">
                 <div class="event-date">{{ evento.data|date:"d/m" }}</div>
                 <div class="event-details">
                     <h4>{{ evento.titulo }}</h4>
                     <p>{{ evento.get_tipo_display }} 
-                    {% if evento.disciplina %}- {{ evento.disciplina.nome }}{% endif %}
-                    </p>
+                    {% if evento.disciplina %}- {{ evento.disciplina.nome }}{% endif %}</p>
                     {% if evento.descricao %}
                     <p class="event-description">{{ evento.descricao }}</p>
                     {% endif %}
                 </div>
             </li>
-            {% endif %}
         {% empty %}
             <li class="empty-state">Sem eventos próximos.</li>
         {% endfor %}
     </ul>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const prevBtn = document.getElementById("prev-month");
+        const nextBtn = document.getElementById("next-month");
+        const calendarGrid = document.querySelector(".calendar-grid");
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener("click", function () {
+                navegarMes(-1);
+            });
+
+            nextBtn.addEventListener("click", function () {
+                navegarMes(1);
+            });
+        }
+
+        function navegarMes(offset) {
+            const controls = document.getElementById("calendar-controls");
+            let mes = parseInt(controls.getAttribute("data-mes"));
+            let ano = parseInt(controls.getAttribute("data-ano"));
+
+            mes += offset;
+            if (mes < 1) {
+                mes = 12;
+                ano -= 1;
+            } else if (mes > 12) {
+                mes = 1;
+                ano += 1;
+            }
+
+            calendarGrid.classList.add("hidden");
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('mes', mes);
+            url.searchParams.set('ano', ano);
+
+            setTimeout(() => {
+                window.location.href = url.toString();
+            }, 500);
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'event-tooltip-global';
+    document.body.appendChild(tooltip);
+    
+    let tooltipVisible = false;
+    let activeEventDot = null;
+
+    document.querySelectorAll('.event-dot').forEach(dot => {
+        dot.addEventListener('mouseenter', function (e) {
+            activeEventDot = this;
+            showTooltip(this);
+        });
+
+
+        dot.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (activeEventDot === this && tooltipVisible) {
+                hideTooltip();
+            } else {
+                activeEventDot = this;
+                showTooltip(this);
+            }
+        });
+    });
+
+    function showTooltip(dot) {
+        tooltip.innerHTML = `
+            <strong>${dot.dataset.title}</strong><br>
+            <span>${dot.dataset.hora}</span><br>
+            <span>${dot.dataset.tipo}</span><br>
+            ${dot.dataset.desc ? `<p>${dot.dataset.desc}</p>` : ''}
+            <div class="tooltip-actions">
+                <a href="${dot.dataset.editUrl}" class="tooltip-btn">Editar</a>
+                <a href="${dot.dataset.deleteUrl}" class="tooltip-btn delete">Excluir</a>
+                <a href="${dot.dataset.concluirUrl}" class="tooltip-btn concluir">Concluir</a>
+            </div>
+        `;
+
+        tooltip.style.display = 'block';
+        
+        const dotRect = dot.getBoundingClientRect();
+        const dotCenterX = dotRect.left + (dotRect.width / 2);
+        const dotCenterY = dotRect.top + (dotRect.height / 2);
+        
+        positionTooltipNearDot(dotCenterX, dotCenterY);
+        
+        setTimeout(() => {
+            tooltip.style.opacity = '1';
+        }, 10);
+        
+        tooltipVisible = true;
+    }
+    
+    function positionTooltipNearDot(dotX, dotY) {
+        const tooltipWidth = tooltip.offsetWidth || 200; 
+        const tooltipHeight = tooltip.offsetHeight || 150;
+        
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        let left = dotX + 20;
+        let top = dotY - (tooltipHeight / 2);
+        
+        if (left + tooltipWidth > viewportWidth - 20) {
+            left = dotX - tooltipWidth - 20;
+        }
+        
+        if (top < 10) {
+            top = 10;
+        } else if (top + tooltipHeight > viewportHeight - 10) {
+            top = viewportHeight - tooltipHeight - 10;
+        }
+        
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+    }
+
+    function hideTooltip() {
+        tooltip.style.opacity = '0';
+        tooltipVisible = false;
+        setTimeout(() => {
+            if (!tooltipVisible) {
+                tooltip.style.display = 'none';
+            }
+        }, 300);
+    }
+
+    tooltip.addEventListener('mouseenter', function () {
+    });
+
+    tooltip.addEventListener('mouseleave', function () {
+        hideTooltip();
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!tooltip.contains(e.target) && 
+            !e.target.classList.contains('event-dot')) {
+            hideTooltip();
+        }
+    });
+});
+</script>
+
 {% endblock %}
