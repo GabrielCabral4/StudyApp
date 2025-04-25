@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo_pagina }}{% endblock %}
+
+{% block content %}
+<div class="evento-form-container">
+    <h2>{{ titulo_pagina }}</h2>
+    <form method="post" class="evento-form">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.titulo.label_tag }} {{ form.titulo }}
+        </div>
+        <div class="form-group">
+            {{ form.data.label_tag }} {{ form.data }}
+        </div>
+        <div class="form-group">
+            {{ form.tipo.label_tag }} {{ form.tipo }}
+        </div>
+        <div class="form-group">
+            {{ form.disciplina.label_tag }} {{ form.disciplina }}
+        </div>
+        <div class="form-group">
+            {{ form.descricao.label_tag }} {{ form.descricao }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'calendario' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

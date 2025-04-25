@@ -1,0 +1,87 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}
+    <h1 class="page-title">
+        <span class="material-symbols-outlined">restaurant</span>
+        Planejamento de Refeições
+    </h1>
+{% endblock %}
+
+{% block background %}
+<div class="refeicoes"></div>
+{% endblock %}
+
+{% block content_body %}
+{% if messages %}
+  <div class="alert-container">
+    {% for message in messages %}
+      <div class="alert alert-success fade-out">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="refeicoes-container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="dias-grid">
+            {% for plano in planos %}
+                <div class="dia-card">
+                    <h3>{{ plano.get_dia_semana_display }}</h3>
+
+                    <div class="refeicao">
+                        <label for="cafe_{{ plano.pk }}">Café da Manhã</label>
+                        <select name="cafe_{{ plano.pk }}" id="cafe_{{ plano.pk }}" class="select-receita">
+                            <option value="">---</option>
+                            {% for receita in receitas %}
+                                <option value="{{ receita.id }}" {% if plano.cafe_manha and plano.cafe_manha.id == receita.id %}selected{% endif %}>
+                                    {{ receita.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="refeicao">
+                        <label for="almoco_{{ plano.pk }}">Almoço</label>
+                        <select name="almoco_{{ plano.pk }}" id="almoco_{{ plano.pk }}" class="select-receita">
+                            <option value="">---</option>
+                            {% for receita in receitas %}
+                                <option value="{{ receita.id }}" {% if plano.almoco and plano.almoco.id == receita.id %}selected{% endif %}>
+                                    {{ receita.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="refeicao">
+                        <label for="jantar_{{ plano.pk }}">Jantar</label>
+                        <select name="jantar_{{ plano.pk }}" id="jantar_{{ plano.pk }}" class="select-receita">
+                            <option value="">---</option>
+                            {% for receita in receitas %}
+                                <option value="{{ receita.id }}" {% if plano.jantar and plano.jantar.id == receita.id %}selected{% endif %}>
+                                    {{ receita.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="refeicao">
+                        <label for="lanches_{{ plano.pk }}">Lanches</label>
+                        <select name="lanches_{{ plano.pk }}" id="lanches_{{ plano.pk }}" class="select-receita">
+                            <option value="">---</option>
+                            {% for receita in receitas %}
+                                <option value="{{ receita.id }}" {% if plano.lanches and plano.lanches.id == receita.id %}selected{% endif %}>
+                                    {{ receita.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn-salvar-refeicoes">Salvar Planejamento</button>
+    </form>
+</div>
+{% endblock %}

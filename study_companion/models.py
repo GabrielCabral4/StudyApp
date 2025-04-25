@@ -65,22 +65,6 @@ class EventoCalendario(models.Model):
         return self.data > timezone.now()
     
 
-class PlanejamentoRefeicao(models.Model):
-    dia_semana = models.IntegerField(choices=[(0, 'Segunda'), (1, 'Terça'), (2, 'Quarta'),
-                                     (3, 'Quinta'), (4, 'Sexta'), (5, 'Sábado'), (6, 'Domingo')])
-    cafe_manha = models.CharField(max_length=200, blank=True)
-    almoco = models.CharField(max_length=200, blank=True)
-    jantar = models.CharField(max_length=200, blank=True)
-    lanches = models.CharField(max_length=200, blank=True)
-
-    class Meta:
-        verbose_name = "Planejamento de Refeição"
-        verbose_name_plural = "Planejamento de Refeições"
-
-    def __str__(self):
-        return f"Refeições de {self.get_dia_semana_display()}"
-    
-
 class Receita(models.Model):
     nome = models.CharField(max_length=100)
     ingredientes = models.TextField()
@@ -94,7 +78,23 @@ class Receita(models.Model):
 
     def __str__(self):
         return f"{self.nome} ({self.get_dificuldade_display()}) - {self.tempo_preparo} min"
-    
+
+
+class PlanejamentoRefeicao(models.Model):
+    dia_semana = models.IntegerField(choices=[(0, 'Segunda'), (1, 'Terça'), (2, 'Quarta'),
+                                              (3, 'Quinta'), (4, 'Sexta'), (5, 'Sábado'), (6, 'Domingo')])
+    cafe_manha = models.ForeignKey(Receita, related_name='cafe_manha', blank=True, null=True, on_delete=models.SET_NULL)
+    almoco = models.ForeignKey(Receita, related_name='almoco', blank=True, null=True, on_delete=models.SET_NULL)
+    jantar = models.ForeignKey(Receita, related_name='jantar', blank=True, null=True, on_delete=models.SET_NULL)
+    lanches = models.ForeignKey(Receita, related_name='lanches', blank=True, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = "Planejamento de Refeição"
+        verbose_name_plural = "Planejamento de Refeições"
+
+    def __str__(self):
+        return f"Refeições de {self.get_dia_semana_display()}"
+
 
 class Lembrete(models.Model):
     tipo = models.CharField(max_length=50, choices=[

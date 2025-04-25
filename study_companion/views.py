@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
-from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm
+from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from calendar import monthrange
@@ -116,6 +116,7 @@ def flashcard_update(request, pk):
         form = FlashcardForm(instance=flashcard)
     return render(request, 'study_companion/flashcards/update.html', {'form': form, 'editar': True})
 
+
 @require_POST
 def flashcard_delete(request, pk):
     flashcard = get_object_or_404(Flashcard, pk=pk)
@@ -226,20 +227,21 @@ def evento_create(request):
     else:
         form = EventoCalendarioForm()
 
-    return render(request, 'study_companion/calendario/create.html', {
+    return render(request, 'study_companion/calendario/form.html', {
         'form': form,
     })
+
 
 def evento_update(request, pk):
     evento = get_object_or_404(EventoCalendario, pk=pk)
     if request.method == 'POST':
-        form = EventoCalendarioForm(request.POST, instance=EventoCalendario)
+        form = EventoCalendarioForm(request.POST, instance=evento)
         if form.is_valid():
             form.save()
             return redirect('calendario')
     else:
-        form = EventoCalendarioForm(instance=EventoCalendario)
-    return render(request, 'study_companion/calendario/update.html', {'form': form, 'evento': evento})
+        form = EventoCalendarioForm(instance=evento)
+    return render(request, 'study_companion/calendario/form.html', {'form': form, 'evento': evento})
 
 
 def evento_delete(request, pk):
@@ -260,15 +262,29 @@ def evento_concluir(request, pk):
 
 def refeicoes_list(request):
     dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
-    planos = []
+    planos = [PlanejamentoRefeicao.objects.get_or_create(dia_semana=i)[0] for i in range(7)]
+    receitas = Receita.objects.all()
 
-    for i, dia in enumerate(dias):
-        plano, created = PlanejamentoRefeicao.objects.get_or_create(dia_semana=i)
-        planos.append(plano)
+    if request.method == 'POST':
+        for plano in planos:
+            cafe_id = request.POST.get(f'cafe_{plano.pk}')
+            almoco_id = request.POST.get(f'almoco_{plano.pk}')
+            jantar_id = request.POST.get(f'jantar_{plano.pk}')
+            lanches_id = request.POST.get(f'lanches_{plano.pk}')
+
+            plano.cafe_manha = Receita.objects.get(id=cafe_id) if cafe_id else None
+            plano.almoco = Receita.objects.get(id=almoco_id) if almoco_id else None
+            plano.jantar = Receita.objects.get(id=jantar_id) if jantar_id else None
+            plano.lanches = Receita.objects.get(id=lanches_id) if lanches_id else None
+            plano.save()
+
+        messages.success(request, "Planejamento de refeições atualizado com sucesso!")
+        return redirect('refeicoes')
 
     return render(request, 'study_companion/refeicoes/list.html', {
         'planos': planos,
-        'dias': dias
+        'dias': dias,
+        'receitas': receitas,
     })
 
 
@@ -288,6 +304,19 @@ def receitas_list(request):
         'receitas': receitas,
         'dificuldades': [('facil', 'Fácil'), ('medio', 'Médio'), ('dificil', 'Difícil')]
     })
+
+
+def receita_create(request):
+    if request.method == 'POST':
+        form = ReceitaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('refeicoes') 
+    else:
+        form = ReceitaForm()
+
+    return render(request, 'study_companion/receitas/list.html', {'form': form})
+
 
 def lembretes_list(request):
     lembretes = Lembrete.objects.all()

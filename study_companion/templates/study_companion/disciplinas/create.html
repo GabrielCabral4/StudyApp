@@ -1,13 +1,33 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
 
-{% block page_title %}Adicionar Disciplina{% endblock %}
+{% block page_title %}
+    <h1 class="page-title">
+        <span class="material-symbols-outlined">book</span>
+        Adicionar Disciplina
+    </h1>
+{% endblock %}
 
 {% block content_body %}
-<h2>Nova Disciplina</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-primary">Salvar</button>
-</form>
+<div class="evento-form-container">
+    <h2>Nova Disciplina</h2>
+    <form method="post" class="evento-form">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.nome.label_tag }} {{ form.nome }}
+        </div>
+        <div class="form-group">
+            {{ form.descricao.label_tag }} {{ form.descricao }}
+        </div>
+        <div class="form-group">
+            {{ form.periodo.label_tag }} {{ form.periodo }}
+        </div>
+        <div class="form-group">
+            {{ form.cor_hex.label_tag }} {{ form.cor_hex }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'disciplinas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
 {% endblock %}

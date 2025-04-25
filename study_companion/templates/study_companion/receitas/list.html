@@ -1,0 +1,39 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">edit</span>
+    Nova Receita
+  </h1>
+{% endblock %}
+
+{% block content_body %}
+  <div class="form-container">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="form-group">
+        <label for="id_nome">Nome</label>
+        {{ form.nome }}
+      </div>
+      <div class="form-group">
+        <label for="id_ingredientes">Ingredientes</label>
+        {{ form.ingredientes }}
+      </div>
+      <div class="form-group">
+        <label for="id_tempo_preparo">Tempo de Preparo (minutos)</label>
+        {{ form.tempo_preparo }}
+      </div>
+      <div class="form-group">
+        <label for="id_dificuldade">Dificuldade</label>
+        {{ form.dificuldade }}
+      </div>
+      <div class="form-group">
+        <label for="id_valor_nutricional">Valor Nutricional</label>
+        {{ form.valor_nutricional }}
+      </div>
+      <button type="submit" class="btn-salvar">Salvar Receita</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1024,8 +1024,8 @@ body {
 }
 .event-dot.prova { background-color: #e74c3c; }
 .event-dot.trabalho { background-color: #1259f3; }
-.event-dot.plantao { background-color: #2eb929; }
-.event-dot.outro { background-color: #7f8c8d; }
+.event-dot.plantao { background-color:  #09f309; }
+.event-dot.outro { background-color: #ffae00; }
 
 .event-tooltip {
     position: absolute;
@@ -1251,10 +1251,341 @@ body {
     pointer-events: none;
 }
 .evento-form-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: #fff;
+    padding: 24px;
+    margin-top: 24px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.evento-form .form-group {
+    margin-bottom: 16px;
+}
+.evento-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+.evento-form input[type="text"],
+.evento-form input[type="datetime-local"],
+.evento-form select,
+.evento-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+.evento-form button.btn {
+    margin-right: 1rem;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.evento-form .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+.evento-form .form-group input,
+.evento-form .form-group select,
+.evento-form .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: "Nunito Sans", sans-serif;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+.evento-form .form-group input:focus,
+.evento-form .form-group select:focus,
+.evento-form .form-group textarea:focus {
+    border-color: rgb(0, 123, 255);
+    outline: none;
+}
+.evento-form button,
+.evento-form a.btn {
+    margin-right: 12px;
+}
+.btn {
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.btn-primary {
+    background-color: rgb(0, 123, 255);
+    color: white;
+}
+.btn-secondary {
+    background-color: rgb(108, 117, 125);
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: "Nunito Sans", sans-serif;
+    transition: background-color 0.3s ease;
+    width: auto; 
+}
+.btn-secondary:hover {
+    background-color: rgb(90, 98, 104);
+}
+.btn-warning {
+    background-color: rgb(255, 193, 7);
+    color: white;
+}
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    background-color: fff;
+}
+.flashcard-form {
+    max-width: 700px;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-weight: bold;
+}
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.btn {
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+.btn-primary {
+    background-color: rgb(0, 123, 255);
+    color: white;
+}
+.btn-secondary {
+    background-color: rgb(108, 117, 125);
+    color: white;
+    text-decoration: underline;
+}
+.refeicoes-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+.dia-card {
+    padding: 15px;
+    background-color: #5197dd; 
+    border-radius: 8px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box; 
+}
+.dia-card:hover {
+    background-color: #1678d3; 
+    transform: scale(1.02);
+    border: 1px solid #1565c0;
+}
+.dia-card h3 {
+    color: #000000;
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+.refeicao {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.refeicao label {
+    display: block;
+    color: #ffffff;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.refeicao input {
+    width: 100%;
+    max-width: 100%; 
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #f9f9f9;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.alert-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+.alert {
+    padding: 14px 24px;
+    border-radius: 12px;
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    color: #2dc46c;
+    font-weight: 600;
+    font-family: "Nunito Sans", sans-serif;
+    box-shadow: 0 4px 20px rgba(40, 167, 69, 0.2);
+    backdrop-filter: blur(4px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.fade-out {
+    animation: fadeSlide 4s forwards;
+}
+@keyframes fadeSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+.btn-salvar-refeicoes {
+    background-color: #1c46d3;
+    color: #fff;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+    margin-top: 20px;
+    align-self: center;
+}
+.btn-salvar-refeicoes:hover {
+    background-color: #2980b9; 
+    transform: translateY(-2px);
+}
+.refeicoes{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/static/img/refeicao.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    opacity: 0.35;
+    z-index: -1;
+    pointer-events: none;
+}
+/* Ajuste no estilo do campo de entrada quando uma receita for selecionada */
+/* Estilo principal do container */
+.select2-container--default .select2-selection--single {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #2d2d2d;
+    color: #fff;
+    min-width: 100%;
+}
+
+/* Ajuste no elemento que contém a receita selecionada */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #fff !important;
+    line-height: 40px;
+    padding-left: 8px; /* Aplique padding apenas uma vez */
+    padding-right: 20px; /* Espaço para o botão de limpar */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+/* Remove o estilo duplicado */
+/* .select2-selection__rendered {
+    ...
+} */
+
+/* Resto dos estilos */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    right: 8px; /* Ajuste a posição da seta */
+}
+
+.select2-selection__clear {
+    color: #ccc;
+    margin-right: 10px; /* Espaço entre o texto e o botão de limpar */
+}
+
+.select2-dropdown {
+    background-color: #1f1f1f;
+    color: white;
+    border: 1px solid #444;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #444 !important;
+    color: white;
+}
+
+/* Adicione este estilo para melhorar a visibilidade das opções */
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: #333;
+}
+
+.select2-results__option {
+    padding: 8px 12px;
+    color: #fff;
 }

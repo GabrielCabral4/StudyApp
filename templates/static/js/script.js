@@ -383,4 +383,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   init();
+
+});
+$(document).ready(function() {
+    $('.select-receita').select2({
+        placeholder: "Selecione uma receita",
+        allowClear: true
+    }).on('select2:select', function(e) {
+        console.log('Item selecionado:', e.params.data);
+    });
+    
+    // Verificar se o Select2 está inicializando corretamente
+    console.log('Select2 inicializado para:', $('.select-receita').length, 'elementos');
 });
