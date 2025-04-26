@@ -1,0 +1,50 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+{% load lembrete_extras %}
+
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">notifications</span>
+    Lembretes
+  </h1>
+{% endblock %}
+
+{% block content_actions %}
+  <a href="{% url 'lembrete_add' %}" class="icon-expand">
+    <span>Novo Lembrete</span>
+  </a>
+{% endblock %}
+
+{% block content_body %}
+  <div class="lembretes-container">
+    {% if lembretes %}
+      <ul class="lembrete-lista">
+        {% for lembrete in lembretes %}
+          <li class="lembrete-card">
+            <h4>
+              {% if lembrete.tipo == 'agua' %}
+                💧 Hidratação
+              {% elif lembrete.tipo == 'pausa' %}
+                ⏸️ Pausa
+              {% elif lembrete.tipo == 'alongamento' %}
+                🤸‍♂️ Alongamento
+              {% else %}
+                🔔 {{ lembrete.get_tipo_display }}
+              {% endif %}
+            </h4>
+            <p><strong>Mensagem:</strong> {{ lembrete.mensagem }}</p>
+            <p><strong>De:</strong> {{ lembrete.hora_inicio }} <strong>até</strong> {{ lembrete.hora_fim }}</p>
+            <p><strong>Intervalo:</strong> {{ lembrete.intervalo }} min</p>
+            <p><strong>Dias:</strong> {{ lembrete.dias_semana|dias_ativos:"Dom,Seg,Ter,Qua,Qui,Sex,Sab" }}</p>
+            <div class="lembrete-actions">
+              <a href="{% url 'lembrete_edit' lembrete.pk %}" class="btn-editar">Editar</a>
+              <a href="{% url 'lembrete_delete' lembrete.pk %}" class="btn-excluir">Excluir</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-state">Nenhum lembrete cadastrado ainda.</p>
+    {% endif %}
+  </div>
+{% endblock %}

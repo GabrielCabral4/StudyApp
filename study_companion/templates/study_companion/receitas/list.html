@@ -1,39 +1,90 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
+{% load receitas_extras %}
 
 {% block page_title %}
   <h1 class="page-title">
-    <span class="material-symbols-outlined">edit</span>
-    Nova Receita
+    <span class="material-symbols-outlined">restaurant_menu</span>
+    Receitas
   </h1>
 {% endblock %}
 
+{% block content_actions %}
+  <a href="{% url 'receita_add' %}" class="icon-expand">
+    <span>Nova Receita</span>
+  </a>
+{% endblock %}
+
+{% block background %}
+<div class="receitas"></div>
+{% endblock %}
+
 {% block content_body %}
-  <div class="form-container">
-    <form method="post">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-      <div class="form-group">
-        <label for="id_nome">Nome</label>
-        {{ form.nome }}
-      </div>
-      <div class="form-group">
-        <label for="id_ingredientes">Ingredientes</label>
-        {{ form.ingredientes }}
-      </div>
-      <div class="form-group">
-        <label for="id_tempo_preparo">Tempo de Preparo (minutos)</label>
-        {{ form.tempo_preparo }}
-      </div>
-      <div class="form-group">
-        <label for="id_dificuldade">Dificuldade</label>
-        {{ form.dificuldade }}
-      </div>
-      <div class="form-group">
-        <label for="id_valor_nutricional">Valor Nutricional</label>
-        {{ form.valor_nutricional }}
-      </div>
-      <button type="submit" class="btn-salvar">Salvar Receita</button>
-    </form>
-  </div>
+<form id="filtro-receitas-form" class="filter-bar">
+  <select name="dificuldade" id="dificuldade-filter">
+      <option value="">Todas as dificuldades</option>
+      <option value="1" {% if request.GET.dificuldade == '1' %}selected{% endif %}>Fácil</option>
+      <option value="2" {% if request.GET.dificuldade == '2' %}selected{% endif %}>Média</option>
+      <option value="3" {% if request.GET.dificuldade == '3' %}selected{% endif %}>Difícil</option>
+  </select>
+  <input type="text" name="search" id="search-receita-input" placeholder="Buscar receita..." value="{{ search }}">
+  <button type="submit" class="btn-buscar">Buscar</button>
+</form>
+
+<div class="receitas-cadastradas">
+  <h3>Receitas Cadastradas</h3>
+  <ul class="receita-lista">
+    {% for item in receitas_info %}
+      {% with receita=item.receita %}
+        <li class="receita-item">
+          <div class="receita-detalhes">
+            <h4>{{ receita.nome|highlight:search }}</h4>
+            <p>Dificuldade: {{ receita.get_dificuldade_display }} | Tempo de preparo: {{ receita.tempo_preparo }} min</p>
+          
+            {% if receita.ingredientes %}
+              <p class="ingredientes">
+                <strong>Ingredientes:</strong> {{ receita.ingredientes|highlight:search }}
+              </p>
+            {% endif %}
+          
+            {% if receita.valor_nutricional %}
+              <p class="valor-nutricional">
+                <strong>Valor Nutricional:</strong> {{ receita.valor_nutricional|highlight:search }}
+              </p>
+            {% endif %}
+          </div>
+          
+          <div class="card-actions">
+            <a href="{% url 'receita_edit' receita.pk %}" class="btn-editar">Editar</a>
+            <a href="{% url 'receita_delete' receita.pk %}" class="btn-excluir">Excluir</a>
+          </div>
+        </li>
+      {% endwith %}
+    {% empty %}
+      <li class="empty-state">Nenhuma receita cadastrada ainda.</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const dificuldadeSelect = document.getElementById('dificuldade-filter');
+    const searchInput = document.getElementById('search-receita-input');
+    const form = document.getElementById('filtro-receitas-form');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const params = new URLSearchParams();
+      if (dificuldadeSelect.value) params.append('dificuldade', dificuldadeSelect.value);
+      if (searchInput.value) params.append('search', searchInput.value);
+      
+      window.location.href = '?' + params.toString();
+    });
+
+    dificuldadeSelect.addEventListener('change', function() {
+      form.dispatchEvent(new Event('submit'));
+    });
+  });
+</script>
 {% endblock %}

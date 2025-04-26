@@ -1,0 +1,15 @@
+{% extends "study_companion/base_content.html" %}
+{% block page_title %}Excluir Receita{% endblock %}
+
+{% block content_body %}
+  <div class="form-container">
+    <p>Tem certeza que deseja excluir a receita <strong>{{ object.nome }}</strong>?</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+        <a href="{% url 'receitas' %}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "study_companion/base_content.html" %}
+
+{% block page_title %}
+  <h1 class="page-title">{{ titulo }}</h1>
+{% endblock %}
+
+{% block content_body %}
+  <form method="post" class="styled-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{% url 'lembretes' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

@@ -1,10 +1,17 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
 
-{% block page_title %}Atividades de Relaxamento{% endblock %}
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">self_improvement</span>
+    Ativdades de Relaxamento
+  </h1>
+{% endblock %}
 
 {% block content_actions %}
-<a href="#" class="btn-primary">Nova Atividade</a>
+  <a href="#" class="icon-expand">
+    <span>Nova atividade</span>
+  </a>
 {% endblock %}
 
 {% block content_body %}

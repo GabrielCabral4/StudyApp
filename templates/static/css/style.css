@@ -1528,64 +1528,165 @@ body {
     z-index: -1;
     pointer-events: none;
 }
-/* Ajuste no estilo do campo de entrada quando uma receita for selecionada */
-/* Estilo principal do container */
-.select2-container--default .select2-selection--single {
-    display: flex;
+.select2-container.select2-container--default .select2-selection--single {
+    display: flex !important;
     align-items: center;
+    position: relative;
     height: 40px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     color: #fff;
-    min-width: 100%;
+    width: 100%;
+    overflow: hidden;
+    padding-right: 32px;
 }
-
-/* Ajuste no elemento que contém a receita selecionada */
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #fff !important;
+    display: block;
+    color: #000000 !important;
+    padding-left: 12px;
+    padding-right: 12px;
     line-height: 40px;
-    padding-left: 8px; /* Aplique padding apenas uma vez */
-    padding-right: 20px; /* Espaço para o botão de limpar */
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    flex-grow: 1;
+    width: 100%;
 }
-
-/* Remove o estilo duplicado */
-/* .select2-selection__rendered {
-    ...
-} */
-
-/* Resto dos estilos */
 .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 100%;
-    right: 8px; /* Ajuste a posição da seta */
+    width: 20px;
+    position: absolute;
+    top: 0;
+    right: 8px;
+    pointer-events: none;
 }
-
-.select2-selection__clear {
-    color: #ccc;
-    margin-right: 10px; /* Espaço entre o texto e o botão de limpar */
-}
-
 .select2-dropdown {
-    background-color: #1f1f1f;
+    background-color: #ffffff;
     color: white;
     border: 1px solid #444;
 }
-
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: #444 !important;
-    color: white;
+    color: rgb(0, 0, 0);
 }
-
-/* Adicione este estilo para melhorar a visibilidade das opções */
 .select2-container--default .select2-results__option[aria-selected=true] {
     background-color: #333;
 }
-
 .select2-results__option {
     padding: 8px 12px;
+    color: #000000;
+}
+.select2-selection__clear {
+    position: absolute;
+    right: 10px;
+    color: #ccc !important;
+    cursor: pointer;
+    z-index: 10;
+}
+.receitas-cadastradas {
+    margin-top: 2rem;
+}
+
+.receita-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.receita-item {
+    position: relative;
+    background-color: #2c2c38;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: background 0.3s ease;
+}
+.receita-detalhes h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
     color: #fff;
+}
+.receita-detalhes p {
+    margin: 0.25rem 0;
+    color: #ccc;
+    font-size: 0.95rem;
+}
+.valor-nutricional {
+    font-style: italic;
+    color: #9ae6b4;
+}
+.card-actions {
+    position: absolute;
+    bottom: 1rem;
+    right: 1.5rem;
+    opacity: 0;
+    display: flex;
+    gap: 0.5rem;
+    transition: opacity 0.3s ease;
+}
+.receita-item:hover .card-actions {
+    opacity: 1;
+}
+.btn-editar,
+.btn-excluir {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    color: #fff;
+}
+.btn-editar {
+    background-color: #4f46e5;
+}
+.btn-editar:hover {
+    background-color: #4338ca;
+}
+.btn-excluir {
+    background-color: #ef4444;
+}
+.btn-excluir:hover {
+    background-color: #dc2626;
+}
+mark.highlight {
+    background-color: #ffeaa7;
+    color: #2d3436;
+    padding: 0 3px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.receitas{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/static/img/receitas.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    opacity: 0.35;
+    z-index: -1;
+    pointer-events: none;
+}
+.lembretes-container {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+}
+.lembrete-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.lembrete-card {
+    background-color: #f0f4ff;
+    border-left: 4px solid #4a90e2;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+.lembrete-card:hover {
+    transform: scale(1.02);
 }

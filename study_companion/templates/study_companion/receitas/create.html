@@ -1,0 +1,48 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+{% load form_extras %}
+
+{% block page_title %}
+  <h1 class="page-title">
+    {% if form.instance.pk %}
+      Editar Receita
+    {% else %}
+      Nova Receita
+    {% endif %}
+  </h1>
+{% endblock %}
+
+{% block content_body %}
+  <div class="form-container">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="id_nome">Nome:</label>
+          {{ form.nome|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+          <label for="id_ingredientes">Ingredientes:</label>
+          {{ form.ingredientes|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+          <label for="id_tempo_preparo">Tempo de Preparo:</label>
+          {{ form.tempo_preparo|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+          <label for="id_dificuldade">Dificuldade:</label>
+          {{ form.dificuldade|add_class:"form-control" }}
+        </div>
+        <div class="form-group">
+          <label for="id_valor_nutricional">Valor Nutricional:</label>
+          {{ form.valor_nutricional|add_class:"form-control" }}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'receitas' %}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

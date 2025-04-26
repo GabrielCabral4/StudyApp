@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
-from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm
+from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from calendar import monthrange
@@ -291,6 +291,7 @@ def refeicoes_list(request):
 def receitas_list(request):
     dificuldade = request.GET.get('dificuldade')
     tempo_max = request.GET.get('tempo_max')
+    termo_busca = request.GET.get('search', '')
 
     receitas = Receita.objects.all()
 
@@ -300,9 +301,31 @@ def receitas_list(request):
     if tempo_max:
         receitas = receitas.filter(tempo_preparo__lte=int(tempo_max))
 
+    if termo_busca:
+        receitas = receitas.filter(
+            Q(nome__icontains=termo_busca) |
+            Q(ingredientes__icontains=termo_busca) |
+            Q(valor_nutricional__icontains=termo_busca)
+        ).distinct()
+
+    receitas_info = []
+    for receita in receitas:
+        refeicoes_usadas = list(PlanejamentoRefeicao.objects.filter(
+            Q(cafe_manha=receita) |
+            Q(almoco=receita) |
+            Q(jantar=receita) |
+            Q(lanches=receita)
+        ).distinct())
+
+        receitas_info.append({
+            'receita': receita,
+            'refeicoes': refeicoes_usadas
+        })
+
     return render(request, 'study_companion/receitas/list.html', {
-        'receitas': receitas,
-        'dificuldades': [('facil', 'Fácil'), ('medio', 'Médio'), ('dificil', 'Difícil')]
+        'receitas_info': receitas_info,
+        'dificuldades': [('facil', 'Fácil'), ('medio', 'Médio'), ('dificil', 'Difícil')],
+        'search': termo_busca
     })
 
 
@@ -315,12 +338,67 @@ def receita_create(request):
     else:
         form = ReceitaForm()
 
-    return render(request, 'study_companion/receitas/list.html', {'form': form})
+    return render(request, 'study_companion/receitas/create.html', {'form': form})
+
+
+def receita_update(request, pk):
+    receita = get_object_or_404(Receita, pk=pk)
+    if request.method == 'POST':
+        form = ReceitaForm(request.POST, instance=receita)
+        if form.is_valid():
+            form.save()
+            return redirect('receitas')
+    else:
+        form = ReceitaForm(instance=receita)
+    return render(request, 'study_companion/receitas/update.html', {'form': form, 'receita': receita})
+
+
+def receita_delete(request, pk):
+    receita = get_object_or_404(Receita, pk=pk)
+    if request.method == 'POST':
+        receita.delete()
+        return redirect('receitas')
+    return render(request, 'study_companion/receitas/delete.html', {'receita': receita})
 
 
 def lembretes_list(request):
     lembretes = Lembrete.objects.all()
-    return render(request, 'study_companion/lembretes/list.html', {'lembretes': lembretes})
+    dias_semana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]
+    return render(request, 'study_companion/lembretes/list.html', {
+        'lembretes': lembretes,
+        'dias_semana': dias_semana,
+    })
+
+
+def lembrete_create(request):
+    if request.method == 'POST':
+        form = LembreteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lembretes')
+    else:
+        form = LembreteForm()
+    return render(request, 'study_companion/lembretes/form.html', {'form': form, 'titulo': 'Novo Lembrete'})
+
+
+def lembrete_update(request, pk):
+    lembrete = get_object_or_404(Lembrete, pk=pk)
+    if request.method == 'POST':
+        form = LembreteForm(request.POST, instance=lembrete)
+        if form.is_valid():
+            form.save()
+            return redirect('lembretes')
+    else:
+        form = LembreteForm(instance=lembrete)
+    return render(request, 'study_companion/lembretes/form.html', {'form': form, 'titulo': 'Editar Lembrete'})
+
+
+def lembrete_delete(request, pk):
+    lembrete = get_object_or_404(Lembrete, pk=pk)
+    if request.method == 'POST':
+        lembrete.delete()
+        return redirect('lembretes')
+    return render(request, 'study_companion/lembretes/delete.html', {'lembrete': lembrete})
 
 
 def relaxamento_list(request):
