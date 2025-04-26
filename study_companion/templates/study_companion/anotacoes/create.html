@@ -26,10 +26,8 @@
         <label for="id_conteudo">Conteúdo:</label>
         {{ form.conteudo|add_class:"form-control" }}
 
-        <button type="submit" class="btn-submit">
-            <span class="material-symbols-outlined">save</span>
-            Salvar
-        </button>
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'anotacoes' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 {% endblock %}

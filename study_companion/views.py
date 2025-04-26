@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
-from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm
+from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm, AtividadeRelaxamentoForm
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from calendar import monthrange
@@ -411,6 +411,40 @@ def relaxamento_list(request):
     return render(request, 'study_companion/relaxamento/list.html', {'atividades': atividades})
 
 
+def relaxamento_create(request):
+    if request.method == 'POST':
+        form = AtividadeRelaxamentoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Atividade criada com sucesso!')
+            return redirect('relaxamento')
+    else:
+        form = AtividadeRelaxamentoForm()
+    return render(request, 'study_companion/relaxamento/create.html', {'form': form})
+
+
+def relaxamento_update(request, pk):
+    atividade = get_object_or_404(AtividadeRelaxamento, pk=pk)
+    if request.method == 'POST':
+        form = AtividadeRelaxamentoForm(request.POST, instance=atividade)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Atividade atualizada com sucesso!')
+            return redirect('relaxamento')
+    else:
+        form = AtividadeRelaxamentoForm(instance=atividade)
+    return render(request, 'study_companion/relaxamento/update.html', {'form': form})
+
+
+def relaxamento_delete(request, pk):
+    atividade = get_object_or_404(AtividadeRelaxamento, pk=pk)
+    if request.method == 'POST':
+        atividade.delete()
+        messages.success(request, 'Atividade excluída com sucesso!')
+        return redirect('relaxamento')
+    return render(request, 'study_companion/relaxamento/delete.html', {'object': atividade})
+
+
 def motivacional_list(request):
     mensagens = MensagemMotivacional.objects.all().order_by('-data_criacao')
     return render(request, 'study_companion/motivacional/list.html', {'mensagens': mensagens})
@@ -442,14 +476,6 @@ def dashboard(request):
     }
 
     return render(request, 'study_companion/dashboard.html', context)
-
-
-def explore(request):
-    return render(request, 'study_companion/explore.html')
-
-
-def analytics(request):
-    return render(request, 'study_companion/analytics.html')
 
 
 def settings_view(request):

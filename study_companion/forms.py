@@ -1,5 +1,5 @@
 from django import forms
-from .models import Disciplina, Flashcard, Anotacao, EventoCalendario, Receita, Lembrete
+from .models import Disciplina, Flashcard, Anotacao, EventoCalendario, Receita, Lembrete, AtividadeRelaxamento
 from ckeditor.widgets import CKEditorWidget
 
 class DisciplinaForm(forms.ModelForm):
@@ -63,4 +63,14 @@ class LembreteForm(forms.ModelForm):
             'hora_fim': forms.TimeInput(attrs={'type': 'time'}),
             'intervalo': forms.NumberInput(attrs={'min': 1}),
             'dias_semana': forms.TextInput(attrs={'placeholder': 'Ex: 0111110 (seg a sex)'}),
+        }
+
+class AtividadeRelaxamentoForm(forms.ModelForm):
+    class Meta:
+        model = AtividadeRelaxamento
+        fields = ['titulo', 'descricao', 'duracao']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Título da atividade'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Descrição...'}),
+            'duracao': forms.NumberInput(attrs={'class': 'form-input', 'placeholder': 'Duração em minutos'}),
         }

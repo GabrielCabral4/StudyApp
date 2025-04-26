@@ -603,6 +603,28 @@ body {
     max-width: 700px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
+.form-container p {
+    margin-bottom: 1rem;
+
+}
+.form-container label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    margin-bottom: 1rem;
+}
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
 .form-container h2 {
     text-align: center;
     font-size: 1.8rem;
@@ -628,7 +650,7 @@ body {
     justify-content: center;
     padding: 0.75rem 1.5rem;
     background-color: #4a90e2;
-    color: white;
+    color: #ffffff;
     font-size: 1rem;
     border: none;
     border-radius: 0.6rem;
@@ -636,18 +658,15 @@ body {
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
-
 .btn-submit:hover {
     background-color: #3a7ed3;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
-
 .btn-submit:active {
     transform: scale(0.98);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-
 .btn-submit span {
     margin-right: 0.4rem;
 }
@@ -933,34 +952,49 @@ body {
     opacity: 0.35;
     z-index: -1; 
 }
+.modal.hidden {
+    display: none;
+}
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
-.modal.hidden {
-    display: none;
-}
 .modal-content {
-    background: white;
+    background: #fff;
     padding: 2rem;
-    border-radius: 1rem;
-    max-width: 500px;
+    border-radius: 12px;
+    text-align: center;
     width: 90%;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    max-width: 400px;
 }
-.modal-actions {
+.modal-content h2 {
+    margin-bottom: 1rem;
+    color: #4f46e5;
+}
+.modal-content p {
+    font-size: 2rem;
+    margin: 1rem 0;
+    color: #333;
+}
+#close-modal {
     margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+#close-modal:hover {
+    background-color: #4338ca;
 }
 .calendar-grid {
     display: grid;
@@ -1026,7 +1060,6 @@ body {
 .event-dot.trabalho { background-color: #1259f3; }
 .event-dot.plantao { background-color:  #09f309; }
 .event-dot.outro { background-color: #ffae00; }
-
 .event-tooltip {
     position: absolute;
     bottom: 125%;
@@ -1328,8 +1361,11 @@ body {
     transition: background-color 0.3s ease;
 }
 .btn-primary {
-    background-color: rgb(0, 123, 255);
+    background-color: rgb(25, 122, 226);
     color: white;
+}
+.btn-primary:hover {
+    background: rgb(0, 98, 202);
 }
 .btn-secondary {
     background-color: rgb(108, 117, 125);
@@ -1689,4 +1725,67 @@ mark.highlight {
 }
 .lembrete-card:hover {
     transform: scale(1.02);
+}
+.relaxation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.relaxation-card {
+    position: relative;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #d49adb;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 250px;
+    overflow: hidden;
+}
+.relaxation-card:hover .relaxation-actions {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+.relaxation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.time-badge {
+    background: var(--accent-color);
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+}
+.btn-start {
+    margin-top: 1rem;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    align-self: flex-start; 
+    transition: background-color 0.3s;
+}
+.btn-start:hover {
+    background-color: #4338ca;
+}
+.relaxation-actions {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }

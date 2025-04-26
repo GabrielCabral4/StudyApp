@@ -1,0 +1,21 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">self_improvement</span>
+    Excluir Atividade
+  </h1>
+{% endblock %}
+
+{% block content_body %}
+  <div class="confirm-container">
+    <p>Tem certeza de que deseja excluir a atividade <strong>{{ object.titulo }}</strong>?</p>
+
+    <form method="post" class="confirm-actions">
+      {% csrf_token %}
+      <button type="submit" class="btn-excluir">Excluir</button>
+      <a href="{% url 'relaxamento' %}" class="btn btn-secundary">Cancelar</a>
+    </form>
+  </div>
+{% endblock %}

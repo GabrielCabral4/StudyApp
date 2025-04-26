@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content_actions %}
-  <a href="#" class="icon-expand">
+  <a href="{% url 'relaxamento_add' %}" class="icon-expand">
     <span>Nova atividade</span>
   </a>
 {% endblock %}
@@ -25,6 +25,16 @@
     </select>
 </div>
 
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-success fade-out">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <div class="relaxation-grid">
     {% if atividades %}
         {% for atividade in atividades %}
@@ -34,8 +44,15 @@
                 <h3>{{ atividade.titulo }}</h3>
                 <span class="time-badge">{{ atividade.duracao }} min</span>
             </div>
+  
             <p>{{ atividade.descricao }}</p>
-            <button class="btn-start">Começar Agora</button>
+  
+            <button class="btn-start" data-duration="{{ atividade.duracao }}">Começar Agora</button>
+
+            <div class="relaxation-actions">
+                <a href="{% url 'relaxamento_edit' atividade.pk %}" class="btn-editar">Editar</a>
+                <a href="{% url 'relaxamento_delete' atividade.pk %}" class="btn-excluir">Excluir</a>
+            </div>
         </div>
         {% endfor %}
     {% else %}
@@ -44,5 +61,68 @@
             <p>Nenhuma atividade de relaxamento cadastrada. Adicione atividades para gerenciar seus momentos de descanso!</p>
         </div>
     {% endif %}
-</div>
+  </div>
+
+  <div id="relaxation-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Hora de Relaxar 🌿</h2>
+      <p id="timer">00:00</p>
+      <button id="close-modal">Fechar</button>
+    </div>
+  </div>
+  
+  <script>
+    document.getElementById('duracao-filter').addEventListener('change', function() {
+        const duracao = this.value;
+        const url = new URL(window.location.href);
+        
+        if (duracao) {
+            url.searchParams.set('duracao', duracao);
+        } else {
+            url.searchParams.delete('duracao');
+        }
+        
+        window.location.href = url.toString();
+    });
+  
+    document.querySelectorAll('.btn-start').forEach(button => {
+    button.addEventListener('click', () => {
+        const duration = button.getAttribute('data-duration');
+        openRelaxationModal(duration);
+    });
+    });
+
+    function openRelaxationModal(minutes) {
+        const modal = document.getElementById('relaxation-modal');
+        const timerElement = document.getElementById('timer');
+        const closeModal = document.getElementById('close-modal');
+        
+        modal.classList.remove('hidden');
+
+        let duration = minutes * 60;
+
+        function updateTimer() {
+            const mins = Math.floor(duration / 60);
+            const secs = duration % 60;
+            timerElement.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            if (duration > 0) {
+                duration--;
+            } else {
+                clearInterval(interval);
+                timerElement.textContent = "Tempo encerrado! 🎉";
+            }
+        }
+
+        updateTimer(); 
+        const interval = setInterval(updateTimer, 1000);
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            clearInterval(interval);
+        });
+    }
+
+  </script>
+  
 {% endblock %}
