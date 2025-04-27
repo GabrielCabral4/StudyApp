@@ -1,0 +1,21 @@
+{% extends "study_companion/base_content.html" %}
+
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">warning</span>
+    Confirmar Exclusão
+  </h1>
+{% endblock %}
+
+{% block content_body %}
+  <div class="delete-confirmation">
+    <p>Tem certeza que deseja excluir esta mensagem?</p>
+    <blockquote>"{{ mensagem.conteudo }}"</blockquote>
+    
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn-danger">Excluir</button>
+      <a href="{% url 'motivacional' %}" class="btn-secondary">Cancelar</a>
+    </form>
+  </div>
+{% endblock %}

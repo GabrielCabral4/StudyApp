@@ -9,6 +9,10 @@
   </h1>
 {% endblock %}
 
+{% block background %}
+<div class="lembretes"></div>
+{% endblock %}
+
 {% block content_actions %}
   <a href="{% url 'lembrete_add' %}" class="icon-expand">
     <span>Novo Lembrete</span>

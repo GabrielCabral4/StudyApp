@@ -984,6 +984,15 @@ body {
     margin: 1rem 0;
     color: #333;
 }
+.modal-conteudo {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.modal-autor {
+    font-size: 1rem;
+    color: var(--text-light);
+}
 #close-modal {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
@@ -1788,4 +1797,123 @@ mark.highlight {
     pointer-events: none;
     transform: translateY(10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.lembretes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/static/img/lembretes.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    opacity: 0.35;
+    z-index: -1;
+    pointer-events: none;
+}
+.relaxamento {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/static/img/relaxamento.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    opacity: 0.35;
+    z-index: -1;
+    pointer-events: none;
+}
+.motivacional-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.motivacional-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: relative;
+    transition: transform 0.3s;
+}
+.motivacional-card:hover {
+    transform: translateY(-5px);
+}
+.motivacional-card .conteudo {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+.motivacional-card .autor {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-align: right;
+    margin-bottom: 0.5rem;
+}
+.motivacional-card .agendada {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    text-align: center;
+}
+.motivacional-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.motivacional-card:hover .motivacional-actions {
+    opacity: 1;
+}
+.motivacional-card.entregue {
+    background-color: #d1fae5;
+    opacity: 0.8;
+}
+.delete-confirmation {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+}
+.delete-confirmation blockquote {
+    margin: 1rem 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+.motivacional {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/static/img/motivacional.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    opacity: 0.35;
+    z-index: -1;
+    pointer-events: none;
 }

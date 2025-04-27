@@ -1,0 +1,32 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">edit_note</span>
+    {{ modo }} Mensagem
+  </h1>
+{% endblock %}
+
+{% block content_body %}
+  <div class="evento-form-container">
+    <h2>{{ modo }} Mensagem Motivacional</h2>
+    <form method="post" class="evento-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      
+      <div class="form-group">
+        {{ form.conteudo.label_tag }} {{ form.conteudo }}
+      </div>
+      <div class="form-group">
+        {{ form.autor.label_tag }} {{ form.autor }}
+      </div>
+      <div class="form-group">
+        {{ form.agendada_para.label_tag }} {{ form.agendada_para }}
+      </div>
+      
+      <button type="submit" class="btn btn-primary">{{ modo }}</button>
+      <a href="{% url 'motivacional' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+{% endblock %}

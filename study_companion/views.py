@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
 from datetime import datetime, timedelta
-from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm, AtividadeRelaxamentoForm
+from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm, AtividadeRelaxamentoForm, MensagemMotivacionalForm
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from calendar import monthrange
@@ -448,6 +448,44 @@ def relaxamento_delete(request, pk):
 def motivacional_list(request):
     mensagens = MensagemMotivacional.objects.all().order_by('-data_criacao')
     return render(request, 'study_companion/motivacional/list.html', {'mensagens': mensagens})
+
+
+def motivacional_create(request):
+    if request.method == 'POST':
+        form = MensagemMotivacionalForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Mensagem criada com sucesso!')
+            return redirect('motivacional')
+    else:
+        form = MensagemMotivacionalForm()
+    
+    return render(request, 'study_companion/motivacional/form.html', {'form': form, 'modo': 'Adicionar'})
+
+
+def motivacional_update(request, pk):
+    mensagem = get_object_or_404(MensagemMotivacional, pk=pk)
+    if request.method == 'POST':
+        form = MensagemMotivacionalForm(request.POST, instance=mensagem)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Mensagem atualizada com sucesso!')
+            return redirect('motivacional')
+    else:
+        form = MensagemMotivacionalForm(instance=mensagem)
+    
+    return render(request, 'study_companion/motivacional/form.html', {'form': form, 'modo': 'Editar'})
+
+
+def motivacional_delete(request, pk):
+    mensagem = get_object_or_404(MensagemMotivacional, pk=pk)
+    
+    if request.method == 'POST':
+        mensagem.delete()
+        messages.success(request, 'Mensagem excluída com sucesso!')
+        return redirect('motivacional')
+    
+    return render(request, 'study_companion/motivacional/delete.html', {'mensagem': mensagem})
 
 
 def mural_view(request):
