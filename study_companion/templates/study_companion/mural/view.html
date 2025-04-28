@@ -1,40 +1,121 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
 
-{% block page_title %}Mural de Recados{% endblock %}
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">forum</span>
+    Mural de Recados    
+  </h1>
+{% endblock %}
 
 {% block content_body %}
-<div class="mural-container">
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="alert alert-success fade-out">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="mural-container">
     <div class="new-message-form">
-        <form method="post" action="{% url 'mural' %}">
-            {% csrf_token %}
-            <textarea name="conteudo" placeholder="Deixe um recado carinhoso..." required></textarea>
-            <input type="hidden" name="autor" value="Você">
-            <button type="submit" class="btn-primary">Enviar Recado</button>
-        </form>
+      <form method="post" action="{% url 'mural' %}">
+        {% csrf_token %}
+        <textarea name="conteudo" placeholder="Deixe um recado carinhoso..." required></textarea>
+        <input type="hidden" name="autor" value="Você">
+        <button type="submit" class="btn btn-primary">Enviar Recado</button>
+      </form>
     </div>
 
     <div class="messages-container">
-        {% if recados %}
-            {% for recado in recados %}
-            <div class="message-card {% if recado.autor == 'Você' %}sent{% else %}received{% endif %}">
-                <div class="message-content">
-                    <p>{{ recado.conteudo }}</p>
-                </div>
-                <div class="message-footer">
-                    <small>{{ recado.autor }} - {{ recado.data_criacao|date:"d/m/Y H:i" }}</small>
-                    {% if not recado.lido and recado.autor != 'Você' %}
-                    <span class="unread-badge">Não lido</span>
-                    {% endif %}
-                </div>
+      {% if recados %}
+        {% for recado in recados %}
+          <div class="message-card {% if recado.autor == 'Você' %}sent{% else %}received{% endif %}" style="--i:{{ forloop.counter0 }}">
+            <div class="message-content">
+              <p>{{ recado.conteudo }}</p>
             </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-state">
-                <span class="material-symbols-outlined">forum</span>
-                <p>Nenhum recado ainda. Seja o primeiro a deixar uma mensagem!</p>
+            <div class="message-footer">
+              <small>{{ recado.autor }} - {{ recado.data_criacao|date:"d/m/Y H:i" }}</small>
+          
+              {% if recado.autor == 'Você' %}
+                <div class="message-actions">
+                  <a href="{% url 'recado_edit' recado.pk %}" class="btn-editar">Editar</a>
+                  <a href="{% url 'recado_delete' recado.pk %}" class="btn-excluir">Excluir</a>
+                </div>
+              {% endif %}
+          
+              {% if not recado.lido and recado.autor != 'Você' %}
+                <span class="unread-badge">Não lido</span>
+              {% endif %}
             </div>
-        {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <span class="material-symbols-outlined">forum</span>
+          <p>Nenhum recado ainda. Seja o primeiro a deixar uma mensagem!</p>
+        </div>
+      {% endif %}
     </div>
-</div>
+  </div>
+
+  <div id="editModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Editar Recado</h2>
+      <form id="editForm" method="post">
+        {% csrf_token %}
+        <textarea name="conteudo" id="editTextarea" required></textarea>
+        <div class="modal-buttons">
+          <button type="submit" class="btn-primary">Salvar</button>
+          <button type="button" onclick="closeEditModal()" class="btn-secondary">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="deleteModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Excluir Recado</h2>
+      <p>Tem certeza que deseja excluir este recado?</p>
+      <form id="deleteForm" method="post">
+        {% csrf_token %}
+        <div class="modal-buttons">
+          <button type="submit" class="btn-danger">Confirmar</button>
+          <button type="button" onclick="closeDeleteModal()" class="btn-secondary">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+      const container = document.querySelector('.messages-container');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    });
+  </script>
+
+  <script>
+    function openEditModal(pk, conteudo) {
+      document.getElementById('editModal').style.display = 'block';
+      document.getElementById('editTextarea').value = conteudo;
+      document.getElementById('editForm').action = `/mural/${pk}/editar/`;
+    }
+    
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+    }
+    
+    function openDeleteModal(pk) {
+      document.getElementById('deleteModal').style.display = 'block';
+      document.getElementById('deleteForm').action = `/mural/${pk}/excluir/`;
+    }
+    
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').style.display = 'none';
+    }
+  </script>
 {% endblock %}

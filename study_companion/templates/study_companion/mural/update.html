@@ -1,0 +1,36 @@
+{% extends "study_companion/base_content.html" %}
+{% load static %}
+{% load form_extras %}
+
+{% block page_title %}
+  <h1 class="page-title">
+    <span class="material-symbols-outlined">edit_note</span>
+    {% if recado.pk %}
+      Editar Recado
+    {% else %}
+      Novo Recado
+    {% endif %}
+  </h1>
+{% endblock %}
+
+{% block content_body %}
+  <div class="evento-form-container">
+    <h2>
+      {% if recado.pk %}
+        Editar Recado
+      {% else %}
+        Adicionar Novo Recado
+      {% endif %}
+    </h2>
+    <form method="post" class="evento-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_conteudo">Conteúdo:</label>
+        <textarea name="conteudo" id="id_conteudo" class="form-control" required>{{ recado.conteudo }}</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a href="{% url 'mural' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+{% endblock %}

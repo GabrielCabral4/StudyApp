@@ -502,6 +502,29 @@ def mural_view(request):
     return render(request, 'study_companion/mural/view.html', {'recados': recados})
 
 
+def mural_update(request, pk):
+    recado = get_object_or_404(RecadoMural, pk=pk)
+
+    if request.method == 'POST':
+        recado.conteudo = request.POST.get('conteudo')
+        recado.save()
+        messages.success(request, 'Recado atualizado com sucesso!')
+        return redirect('mural')
+    
+    return render(request, 'study_companion/mural/update.html', {'recado': recado})
+
+
+def mural_delete(request, pk):
+    recado = get_object_or_404(RecadoMural, pk=pk)
+
+    if request.method == 'POST':
+        recado.delete()
+        messages.success(request, 'Recado excluído com sucesso!')
+        return redirect('mural')
+    
+    return render(request, 'study_companion/mural/delete.html', {'recado': recado})
+
+
 def dashboard(request):
     disciplinas_count = Disciplina.objects.count()
     flashcards_count = Flashcard.objects.count()

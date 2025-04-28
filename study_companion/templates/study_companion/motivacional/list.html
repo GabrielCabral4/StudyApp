@@ -18,6 +18,7 @@
 <div class="motivacional"></div>
 {% endblock %}
 
+{% block content_body %}
 {% if messages %}
   <div class="messages">
     {% for message in messages %}
@@ -28,7 +29,6 @@
   </div>
 {% endif %}
 
-{% block content_body %}
 <div class="motivacional-grid">
     {% if mensagens %}
         {% for mensagem in mensagens %}
@@ -36,7 +36,7 @@
                 <p class="conteudo">"{{ mensagem.conteudo }}"</p>
                 <p class="autor">— {{ mensagem.autor }}</p>
                 {% if mensagem.agendada_para %}
-                    <p class="agendada">Agendada para: {{ mensagem.agendada_para|date:"d/m/Y H:i" }}</p>
+                    <p class="agendada">Data: {{ mensagem.agendada_para|date:"d/m/Y H:i" }}</p>
                 {% endif %}
                 <div class="motivacional-actions">
                     <a href="{% url 'motivacional_edit' mensagem.pk %}" class="btn-editar">Editar</a>
