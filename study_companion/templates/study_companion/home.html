@@ -1,115 +1,109 @@
 {% extends "study_companion/base_content.html" %}
 {% load static %}
 
-{% block page_title %}Bem-vinda ao StudyLife Partner!{% endblock %}
+{% block page_title %}
+<div style="text-align: center; width: 100%;">
+    Bem vindo ao StudyLife Partner!
+</div>
+{% endblock %}
 
 {% block content_body %}
-<div class="dashboard-cards">
-    <!-- Próximos Eventos -->
-    <div class="card">
-        <div class="card-header">
-            <h2>Próximos Eventos</h2>
-            <a href="{% url 'calendario' %}" class="btn-link">Ver todos</a>
+<div class="dashboard-container">
+
+    <!-- Linha 1: Saudações e acesso rápido -->
+    <section class="dashboard-hero">
+        <h1>Olá! 👋</h1>
+        <p>Vamos construir um dia produtivo hoje?</p>
+        <div class="quick-actions">
+            <a href="{% url 'flashcards' %}" class="quick-link">Flashcards</a>
+            <a href="{% url 'anotacoes' %}" class="quick-link">Anotações</a>
+            <a href="{% url 'calendario' %}" class="quick-link">Calendário</a>
+            <a href="{% url 'mural' %}" class="quick-link">Mural</a>
+            <a href="{% url 'relaxamento' %}" class="quick-link">Relaxar</a>
         </div>
-        <div class="card-body">
+    </section>
+
+    <!-- Linha 2: Cards dos Módulos -->
+    <section class="dashboard-modules">
+        <div class="module-card">
+            <h2>Estudos 📚</h2>
+            <ul>
+                <li><a href="{% url 'disciplinas' %}">Disciplinas</a></li>
+                <li><a href="{% url 'flashcards' %}">Flashcards</a></li>
+                <li><a href="{% url 'anotacoes' %}">Anotações</a></li>
+            </ul>
+        </div>
+
+        <div class="module-card">
+            <h2>Planejamento 📅</h2>
+            <ul>
+                <li><a href="{% url 'calendario' %}">Calendário</a></li>
+                <li><a href="{% url 'refeicoes' %}">Refeições</a></li>
+                <li><a href="{% url 'receitas' %}">Receitas</a></li>
+            </ul>
+        </div>
+
+        <div class="module-card">
+            <h2>Bem-Estar 🌿</h2>
+            <ul>
+                <li><a href="{% url 'lembretes' %}">Lembretes</a></li>
+                <li><a href="{% url 'relaxamento' %}">Relaxamento</a></li>
+                <li><a href="{% url 'motivacional' %}">Motivacional</a></li>
+            </ul>
+        </div>
+
+        <div class="module-card">
+            <h2>Conexão 🤝</h2>
+            <ul>
+                <li><a href="{% url 'mural' %}">Mural</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Linha 3: Resumo dos próximos eventos, recados e lembretes -->
+    <section class="dashboard-summary">
+        <div class="summary-card">
+            <h3>Próximos Eventos</h3>
             {% if proximos_eventos %}
-                <ul class="event-list">
+                <ul>
                     {% for evento in proximos_eventos %}
-                    <li>
-                        <div class="event-date">{{ evento.data|date:"d/m" }}</div>
-                        <div class="event-details">
-                            <h3>{{ evento.titulo }}</h3>
-                            <p>{{ evento.get_tipo_display }} {% if evento.disciplina %}- {{ evento.disciplina.nome }}{% endif %}</p>
-                        </div>
-                    </li>
+                        <li>{{ evento.data|date:"d/m" }} - {{ evento.titulo }}</li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="empty-state">Sem eventos próximos.</p>
+                <p>Sem eventos próximos.</p>
             {% endif %}
+            <a href="{% url 'calendario' %}" class="view-more">Ver todos</a>
         </div>
-    </div>
 
-    <!-- Recados não lidos -->
-    <div class="card">
-        <div class="card-header">
-            <h2>Recados</h2>
-            <a href="{% url 'mural' %}" class="btn-link">Ver todos</a>
-        </div>
-        <div class="card-body">
+        <div class="summary-card">
+            <h3>Recados Recentes</h3>
             {% if recados_nao_lidos %}
-                <ul class="message-list">
+                <ul>
                     {% for recado in recados_nao_lidos %}
-                    <li>
-                        <div class="message-content">
-                            <p>"{{ recado.conteudo|truncatechars:80 }}"</p>
-                            <small>De: {{ recado.autor }} - {{ recado.data_criacao|date:"d/m/Y" }}</small>
-                        </div>
-                    </li>
+                        <li>{{ recado.conteudo|truncatechars:40 }}</li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="empty-state">Nenhum recado novo.</p>
+                <p>Sem recados novos.</p>
             {% endif %}
+            <a href="{% url 'mural' %}" class="view-more">Ver todos</a>
         </div>
-    </div>
 
-    <!-- Lembretes -->
-    <div class="card">
-        <div class="card-header">
-            <h2>Lembretes</h2>
-            <a href="{% url 'lembretes' %}" class="btn-link">Ver todos</a>
-        </div>
-        <div class="card-body">
+        <div class="summary-card">
+            <h3>Lembretes Ativos</h3>
             {% if lembretes_ativos %}
-                <ul class="reminder-list">
+                <ul>
                     {% for lembrete in lembretes_ativos %}
-                    <li>
-                        <div class="reminder-icon">
-                            <span class="material-symbols-outlined">
-                                {% if lembrete.tipo == 'pausa' %}break_time
-                                {% elif lembrete.tipo == 'agua' %}water_drop
-                                {% elif lembrete.tipo == 'alongamento' %}fitness_center
-                                {% else %}notifications{% endif %}
-                            </span>
-                        </div>
-                        <div class="reminder-details">
-                            <h3>{{ lembrete.get_tipo_display }}</h3>
-                            <p>{{ lembrete.mensagem }}</p>
-                        </div>
-                    </li>
+                        <li>{{ lembrete.get_tipo_display }}</li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="empty-state">Sem lembretes ativos.</p>
+                <p>Sem lembretes ativos.</p>
             {% endif %}
+            <a href="{% url 'lembretes' %}" class="view-more">Ver todos</a>
         </div>
-    </div>
-</div>
+    </section>
 
-<div class="quick-actions">
-    <h2>Acesso Rápido</h2>
-    <div class="action-buttons">
-        <a href="{% url 'flashcards' %}" class="action-btn">
-            <span class="material-symbols-outlined">style</span>
-            <span>Flashcards</span>
-        </a>
-        <a href="{% url 'anotacoes' %}" class="action-btn">
-            <span class="material-symbols-outlined">edit_note</span>
-            <span>Anotações</span>
-        </a>
-        <a href="{% url 'calendario' %}" class="action-btn">
-            <span class="material-symbols-outlined">calendar_month</span>
-            <span>Calendário</span>
-        </a>
-        <a href="{% url 'mural' %}" class="action-btn">
-            <span class="material-symbols-outlined">forum</span>
-            <span>Mural</span>
-        </a>
-        <a href="{% url 'relaxamento' %}" class="action-btn">
-            <span class="material-symbols-outlined">self_improvement</span>
-            <span>Relaxar</span>
-        </a>
-    </div>
 </div>
 {% endblock %}

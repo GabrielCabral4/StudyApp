@@ -1730,10 +1730,25 @@ mark.highlight {
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    position: relative; 
     transition: transform 0.2s;
 }
 .lembrete-card:hover {
     transform: scale(1.02);
+}
+.lembrete-actions {
+    position: absolute;
+    bottom : 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    pointer-events: none; 
+    transition: opacity 0.2s;
+}
+.lembrete-card:hover .lembrete-actions {
+    opacity: 1;
+    pointer-events: auto;
 }
 .relaxation-grid {
     display: grid;
@@ -2008,7 +2023,9 @@ mark.highlight {
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s;
-    float: right;
+    display: block;
+    margin-left: auto;
+    margin-top: 0.5rem;
 }
 .new-message-form button:hover {
     background-color: var(--primary-dark);
@@ -2127,4 +2144,186 @@ mark.highlight {
     0% { opacity: 1; }
     70% { opacity: 1; }
     100% { opacity: 0; }
+}
+.mural {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("/static/img/mural.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    opacity: 0.35;
+    z-index: -1;
+    pointer-events: none;
+}
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 1rem;
+}
+.dashboard-section {
+    background: var(--background-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-elevation);
+}
+.dashboard-section h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+.section-header {
+    margin-bottom: 1rem;
+}
+.section-header h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+.section-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+.dashboard-card {
+    flex: 1 1 200px;
+    background: var(--background-light);
+    border-radius: 8px;
+    padding: 1rem;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    background: var(--background-hover);
+}
+.dashboard-card h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+.dashboard-card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+.mini-card {
+    background: var(--background-card);
+    padding: 1rem;
+    border-radius: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-light);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+}
+.mini-card:hover {
+    transform: translateY(-5px);
+}
+.mini-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+}
+.mini-list li {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+.btn-small {
+    margin-top: 1rem;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: #000000;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+}
+.dashboard-hero {
+    background-color: var(--primary-light);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+}
+.quick-actions {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+.quick-link {
+    background-color: var(--accent);
+    color: rgb(0, 0, 0);
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+.dashboard-modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+.module-card {
+    background: var(--background-card);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+.module-card h2 {
+    margin-bottom: 1rem;
+}
+.module-card ul {
+    list-style: none;
+    padding: 0;
+}
+.module-card ul li {
+    margin-bottom: 0.5rem;
+}
+.module-card ul li a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+.dashboard-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+.summary-card {
+    background: var(--background-card);
+    border-radius: 12px;
+    padding: 1.5rem;
+    flex: 1;
+    min-width: 250px;
+}
+.summary-card ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+.summary-card ul li {
+    margin-bottom: 0.5rem;
+}
+.view-more {
+    display: block;
+    margin-top: 1rem;
+    text-align: right;
+    text-decoration: none;
+    color: var(--accent);
+    font-weight: bold;
 }

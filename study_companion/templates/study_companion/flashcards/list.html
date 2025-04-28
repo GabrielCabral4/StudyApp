@@ -78,7 +78,7 @@
                                             <a href="{% url 'flashcard_edit' flashcard.id %}" class="flashcard-btn edit">
                                                 <span class="material-symbols-outlined">edit</span>
                                             </a>
-                                            <form action="{% url 'flashcard_delete' flashcard.id %}" method="post">
+                                            <form action="{% url 'flashcard_delete' flashcard.id %}" method="post" class="delete-form">
                                                 {% csrf_token %}
                                                 <button type="submit" class="flashcard-btn delete" 
                                                        onclick="return confirm('Tem certeza que deseja excluir este flashcard?')">
@@ -109,4 +109,4 @@
         <span class="current-card">1</span> / <span class="total-cards">10</span>
     </div>
 </div>
-{% endblock %}  
+{% endblock %}

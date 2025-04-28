@@ -12,6 +12,43 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+    <style>
+    :root {
+        /* Cores principais (Modo Claro) */
+        --primary-color: #4CAF50;        /* Verde principal */
+        --primary-color-dark: #388E3C;
+        --background-color: #f5f5f5;     /* Fundo geral */
+        --surface-color: #ffffff;         /* Fundo de cards/seções */
+        --background-card: #fafafa;
+        --text-color: #333333;
+        --text-color-light: #666666;
+        
+        /* Sombra */
+        --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+        --shadow-elevation: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+        /* Cores adicionais */
+        --accent-color: #FFC107;          /* Amarelo para detalhes */
+        --danger-color: #F44336;          /* Vermelho para alertas */
+    }
+    
+    /* Tema Escuro */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --primary-color: #81C784;
+            --primary-color-dark: #66BB6A;
+            --background-color: #121212;
+            --surface-color: #1E1E1E;
+            --background-card: #2C2C2C;
+            --text-color: #f0f0f0;
+            --text-color-light: #bbbbbb;
+    
+            --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.5);
+            --shadow-elevation: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+    }
+ </style>   
       
 </head>
 <body>
