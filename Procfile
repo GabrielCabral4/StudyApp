@@ -1,1 +1,1 @@
-web: gunicorn study_companion.wsgi:application --log-file -
+web: gunicorn StudyLife_Partner.wsgi:application --log-file -
