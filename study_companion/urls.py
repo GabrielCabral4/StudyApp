@@ -1,3 +1,4 @@
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
 
@@ -42,5 +43,7 @@ urlpatterns = [
     path('mural/<int:pk>/excluir/', views.mural_delete, name='recado_delete'),
     path('settings/', views.settings_view, name='settings'),
     path('account/', views.account_view, name='account'),
-    path('logout/', views.logout_view, name='logout'),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('perfil/', views.perfil_view, name='perfil'),  
 ]

@@ -487,7 +487,7 @@ def motivacional_delete(request, pk):
     
     return render(request, 'study_companion/motivacional/delete.html', {'mensagem': mensagem})
 
-
+@login_required
 def mural_view(request):
     recados = RecadoMural.objects.all().order_by('-data_criacao')
 
@@ -561,3 +561,7 @@ def logout_view(request):
 
 def study_companion(request):
     return redirect('home')
+
+@login_required
+def perfil_view(request):
+    return render(request, 'perfil.html')
