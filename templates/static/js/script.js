@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ==================== CONFIGURAÇÕES ====================
     const config = {
         cardWidth: 320,        
         cardGap: 40,           
@@ -9,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
         viewportPadding: 20
     };
   
-    // ==================== ESTADO ====================
     const state = {
         currentIndex: 0,       
         totalCards: 0,         
@@ -21,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resizeTimer: null      
     };
   
-    // ==================== SELETORES DOM ====================
     const selectors = {
         carousel: '#flashcard-carousel',
         prevButton: '#prev-button',
@@ -39,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
   
-    // ==================== INICIALIZAÇÃO ====================
     function init() {
         logDebug('Inicializando carrossel de flashcards');
         
@@ -53,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setupEventListeners();
         
-        // Pequeno atraso para garantir que o DOM está pronto
         setTimeout(() => {
             updateCarouselState();
             updatePagination();
@@ -61,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     }
   
-    // ==================== GERENCIAMENTO DE CARDS ====================
     function refreshCards() {
         const allCards = document.querySelectorAll(selectors.cards);
         state.cards = Array.from(allCards);
@@ -101,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.add('hidden');
                 card.classList.remove('visible', 'active', 'prev', 'next');
                 
-                // Resetar qualquer card virado quando escondido
                 const inner = card.querySelector('.flashcard-inner');
                 if (inner) {
                     inner.classList.remove('flipped');
@@ -133,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
   
-    // ==================== NAVEGAÇÃO DO CARROSSEL ====================
     function updateCarouselState() {
       if (state.isAnimating) return;
       state.isAnimating = true;
@@ -145,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
       }
       
-      // Resetar qualquer card virado antes de mover
       visibleCards.forEach(card => {
           const inner = card.querySelector('.flashcard-inner');
           if (inner && inner.classList.contains('flipped')) {
@@ -156,29 +147,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const cardWidth = config.cardWidth;
       const gap = config.cardGap;
       
-      // Garante que o carousel está no modo de posicionamento correto
       state.carousel.style.position = 'relative';
       state.carousel.style.transition = `transform ${config.transitionTime}ms ${config.easing}`;
       
       const newPosition = -(state.currentIndex * (cardWidth + gap));
       
-      // Atualiza a posição do carrossel
       state.carousel.style.transform = `translateX(${newPosition}px)`;
       
-      // Atualiza as classes e z-index de cada card
       visibleCards.forEach((card, index) => {
-          // Removendo classes antigas
           card.classList.remove('active', 'prev', 'next');
           
-          // Define a posição e z-index base para cada card
           card.style.position = 'relative';
           card.style.transition = `all ${config.transitionTime}ms ${config.easing}`;
           
-          // Define z-index baseado na distância do card atual
           const distance = Math.abs(index - state.currentIndex);
           card.style.zIndex = 10 - distance;
           
-          // Aplica classes baseadas na posição relativa
           if (index === state.currentIndex) {
               card.classList.add('active');
           } else if (index === state.currentIndex - 1) {
@@ -191,11 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
       logDebug('Cards visíveis: ' + visibleCards.length);
       logDebug('Posição calculada: ' + newPosition);
   
-      // Atualiza botões e paginação
       updateNavigationButtons();
       updatePagination();
   
-      // Reseta o estado de animação após o tempo de transição
       setTimeout(() => {
           state.isAnimating = false;
       }, config.transitionTime);
@@ -255,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
   
-    // ==================== EVENTOS ====================
     function setupEventListeners() {
         // Configura botões de navegação
         const prevButton = document.querySelector(selectors.prevButton);
@@ -275,12 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // Configuração dos eventos para virar os flashcards
         state.cards.forEach(card => {
             const inner = card.querySelector('.flashcard-inner');
             if (inner) {
                 inner.addEventListener('click', (e) => {
-                    // Impede propagação do evento para evitar conflitos
                     e.stopPropagation();
                     
                     if (state.isAnimating) return;
@@ -288,12 +267,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const isActive = card.classList.contains('active');
                     
                     if (isActive) {
-                        // Aumenta o z-index temporariamente quando virado
                         card.dataset.originalZIndex = card.style.zIndex;
                         card.style.zIndex = "100";
                         inner.classList.toggle('flipped');
                     } else {
-                        // Se não é o card ativo, navega até ele
                         const cardIndex = state.cards.filter(c => !c.classList.contains('hidden')).indexOf(card);
                         if (cardIndex >= 0) {
                             navigateTo(cardIndex);
@@ -302,7 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
             
-            // Impede a propagação de eventos em botões internos
             const actionButtons = card.querySelectorAll('.flashcard-btn, button');
             actionButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -310,7 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
             
-            // Impede a propagação em formulários
             const forms = card.querySelectorAll('form');
             forms.forEach(form => {
                 form.addEventListener('click', (e) => {
@@ -319,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Restaura o z-index original após a animação de virar
         state.cards.forEach(card => {
             const inner = card.querySelector('.flashcard-inner');
             if (inner) {
@@ -334,11 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Filtros rápidos
         const filterChips = document.querySelectorAll(selectors.chips.filter);
         filterChips.forEach(chip => {
             chip.addEventListener('click', (e) => {
-                // Impede propagação do evento
                 e.stopPropagation();
                 
                 filterChips.forEach(c => c.classList.remove('selected'));
@@ -358,11 +330,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Filtros de disciplina
         const subjectChips = document.querySelectorAll(selectors.chips.subject);
         subjectChips.forEach(chip => {
             chip.addEventListener('click', (e) => {
-                // Impede propagação do evento
                 e.stopPropagation();
                 
                 chip.classList.toggle('selected');
@@ -378,11 +348,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Filtros de dificuldade
         const difficultyChips = document.querySelectorAll(selectors.chips.difficulty);
         difficultyChips.forEach(chip => {
             chip.addEventListener('click', (e) => {
-                // Impede propagação do evento
                 e.stopPropagation();
                 
                 chip.classList.toggle('selected');
@@ -398,11 +366,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Botão de iniciar revisão
         const startButton = document.querySelector(selectors.startButton);
         if (startButton) {
             startButton.addEventListener('click', (e) => {
-                // Impede propagação do evento
                 e.stopPropagation();
                 
                 refreshCards();
@@ -416,7 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // Responsividade em redimensionamento
         window.addEventListener('resize', () => {
             clearTimeout(state.resizeTimer);
             state.resizeTimer = setTimeout(() => {
@@ -424,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 200);
         });
         
-        // Navegação pelo teclado
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') {
                 navigatePrev();
@@ -447,14 +411,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
   
-    // ==================== UTILITÁRIOS ====================
     function logDebug(message) {
         if (config.debug) {
             console.log(`[Flashcards] ${message}`);
         }
     }
   
-    // Inicializa o carrossel
     init();
   
   });

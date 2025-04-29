@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404    
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
-from datetime import datetime, timedelta
-from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm, AtividadeRelaxamentoForm, MensagemMotivacionalForm
+from datetime import datetime
+from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm, AtividadeRelaxamentoForm, MensagemMotivacionalForm, CustomUserCreationForm
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from calendar import monthrange
+from django.contrib.auth import login
 
 
 def home(request):
@@ -547,21 +547,20 @@ def account_view(request):
     return render(request, 'study_companion/account.html')
 
 
-def report(request):
-    return render(request, 'study_companion/report.html')
-
-
-def contact(request):
-    return render(request, 'study_companion/study_companion/contact.html')
-
-
 def logout_view(request):
     return render(request, 'study_companion/logout.html')
-
-
-def study_companion(request):
-    return redirect('home')
 
 @login_required
 def perfil_view(request):
     return render(request, 'perfil.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user) 
+            return redirect('home')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'study_companion/registration/register.html', {'form': form})

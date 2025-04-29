@@ -1,6 +1,8 @@
 from django import forms
 from .models import Disciplina, Flashcard, Anotacao, EventoCalendario, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional
 from ckeditor.widgets import CKEditorWidget
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 class DisciplinaForm(forms.ModelForm):
     class Meta:
@@ -84,3 +86,10 @@ class MensagemMotivacionalForm(forms.ModelForm):
             'autor': forms.TextInput(attrs={'placeholder': 'Nome do autor'}),
             'agendada_para': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
