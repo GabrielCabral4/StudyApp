@@ -27,8 +27,7 @@
     <div class="new-message-form">
       <form method="post" action="{% url 'mural' %}">
         {% csrf_token %}
-        <textarea name="conteudo" placeholder="Deixe um recado carinhoso..." required></textarea>
-        <input type="hidden" name="autor" value="Você">
+        <textarea name="conteudo" placeholder="Digite sua mensagem..." required></textarea>
         <button type="submit" class="btn btn-primary">Enviar Recado</button>
       </form>
     </div>
@@ -41,9 +40,12 @@
               <p>{{ recado.conteudo }}</p>
             </div>
             <div class="message-footer">
-              <small>{{ recado.autor }} - {{ recado.data_criacao|date:"d/m/Y H:i" }}</small>
+              <small>
+                De {{ recado.remetente.username }} para {{ recado.destinatario.username }} -
+                {{ recado.data_criacao|date:"d/m/Y H:i" }}
+              </small>
           
-              {% if recado.autor == 'Você' %}
+              {% if recado.remetente == request.user %}
                 <div class="message-actions">
                   <a href="{% url 'recado_edit' recado.pk %}" class="btn-editar">Editar</a>
                   <a href="{% url 'recado_delete' recado.pk %}" class="btn-excluir">Excluir</a>

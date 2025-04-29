@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404    
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural)
+from .models import (Disciplina, Flashcard, Anotacao, EventoCalendario, PlanejamentoRefeicao, Receita, Lembrete, AtividadeRelaxamento, MensagemMotivacional, RecadoMural, Parceria)
 from datetime import datetime
 from .forms import DisciplinaForm, FlashcardForm, AnotacaoForm, EventoCalendarioForm, ReceitaForm, LembreteForm, AtividadeRelaxamentoForm, MensagemMotivacionalForm, CustomUserCreationForm
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 from calendar import monthrange
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -487,19 +488,38 @@ def motivacional_delete(request, pk):
     
     return render(request, 'study_companion/motivacional/delete.html', {'mensagem': mensagem})
 
+
 @login_required
 def mural_view(request):
-    recados = RecadoMural.objects.all().order_by('-data_criacao')
+    user = request.user
+
+    parceria = Parceria.objects.filter(usuario1=user).first() or \
+               Parceria.objects.filter(usuario2=user).first()
+
+    if not parceria:
+        return render(request, 'study_companion/mural/sem_parceiro.html')
+
+    parceiro = parceria.parceiro_de(user)
+
+    recados = RecadoMural.objects.filter(
+        (Q(remetente=user) & Q(destinatario=parceiro)) |
+        (Q(remetente=parceiro) & Q(destinatario=user))
+    ).order_by('data_criacao')
 
     if request.method == 'POST':
         conteudo = request.POST.get('conteudo')
-        autor = request.POST.get('autor', 'Você')
-
         if conteudo:
-            RecadoMural.objects.create(conteudo=conteudo, autor=autor)
+            RecadoMural.objects.create(
+                conteudo=conteudo,
+                remetente=user,
+                destinatario=parceiro
+            )
             return redirect('mural')
-        
-    return render(request, 'study_companion/mural/view.html', {'recados': recados})
+
+    return render(request, 'study_companion/mural/view.html', {
+        'recados': recados,
+        'parceiro': parceiro
+    })
 
 
 def mural_update(request, pk):
@@ -523,6 +543,80 @@ def mural_delete(request, pk):
         return redirect('mural')
     
     return render(request, 'study_companion/mural/delete.html', {'recado': recado})
+
+
+@login_required
+def gerenciar_parceria(request):
+    user = request.user
+    parceria_ativa = Parceria.objects.filter(
+        (Q(usuario1=user) | Q(usuario2=user)) & Q(aceita=True)
+    ).first()
+
+    parceiro = None
+    if parceria_ativa:
+        parceiro = (
+            parceria_ativa.usuario2
+            if parceria_ativa.usuario1 == user
+            else parceria_ativa.usuario1
+        )
+
+    convites_recebidos = Parceria.objects.filter(usuario2=user, aceita=False)
+    convites_enviados = Parceria.objects.filter(usuario1=user, aceita=False)
+
+    context = {
+        'parceria': parceria_ativa,
+        'parceiro': parceiro,
+        'convites_recebidos': convites_recebidos,
+        'convites_enviados': convites_enviados,
+    }
+    return render(request, 'study_companion/parcerias/gerenciar.html', context)
+
+
+@login_required
+def enviar_convite_parceria(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        try:
+            destino = User.objects.get(username=username)
+            if destino == request.user:
+                messages.error(request, "Você não pode enviar convite para si mesmo.")
+            elif Parceria.objects.filter(
+                Q(usuario1=request.user, usuario2=destino) | 
+                Q(usuario1=destino, usuario2=request.user)
+            ).exists():
+                messages.error(request, "Já existe uma parceria ou convite com este usuário.")
+            else:
+                Parceria.objects.create(usuario1=request.user, usuario2=destino)
+                messages.success(request, "Convite enviado com sucesso!")
+        except User.DoesNotExist:
+            messages.error(request, "Usuário não encontrado.")
+        return redirect('gerenciar_parceria')
+
+
+@login_required
+def aceitar_parceria(request, parceria_id):
+    parceria = get_object_or_404(Parceria, id=parceria_id, usuario2=request.user)
+    parceria.aceita = True
+    parceria.save()
+    messages.success(request, "Parceria aceita!")
+    return redirect('gerenciar_parceria')
+
+
+@login_required
+def recusar_parceria(request, parceria_id):
+    parceria = get_object_or_404(Parceria, id=parceria_id, usuario2=request.user)
+    parceria.delete()
+    messages.success(request, "Convite recusado.")
+    return redirect('gerenciar_parceria')
+
+
+@login_required
+def encerrar_parceria(request, parceria_id):
+    parceria = get_object_or_404(Parceria, id=parceria_id)
+    if parceria.envolve(request.user):
+        parceria.delete()
+        messages.success(request, "Parceria encerrada.")
+    return redirect('gerenciar_parceria')
 
 
 def dashboard(request):

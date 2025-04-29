@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from ckeditor.fields import RichTextField
+from django.contrib.auth.models import User
 
 PERIODO_CHOICES = [(i, f"{i}° Período") for i in range(1, 13)]
 
@@ -143,13 +144,27 @@ class MensagemMotivacional(models.Model):
 
 class RecadoMural(models.Model):
     conteudo = models.TextField()
-    autor = models.CharField(max_length=100)
+    remetente = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recados_enviados', null=True)
+    destinatario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recados_recebidos', null=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
     lido = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Recado de {self.autor}, {self.conteudo[:30]}..."
-    
-    def marcar_como_lido(self):
-        self.lido = True
-        self.save()
+        return f"De {self.remetente.username} para {self.destinatario.username}"
+
+
+class Parceria(models.Model):
+    usuario1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='parcerias_iniciadas')
+    usuario2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='parcerias_recebidas')
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    aceita = models.BooleanField(default=False)
+
+    def __str__(self):
+        status = "Ativa" if self.aceita else "Pendente"
+        return f"{self.usuario1.username} → {self.usuario2.username} ({status})"
+
+    def envolve(self, user):
+        return self.usuario1 == user or self.usuario2 == user
+
+    def parceiro_de(self, usuario):
+        return self.usuario2 if self.usuario1 == usuario else self.usuario1
