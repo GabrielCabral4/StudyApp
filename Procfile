@@ -1,1 +1,1 @@
-web: gunicorn StudyLife_Partner.wsgi:application --log-file -
+web: python manage.py collectstatic --noinput && python manage.py migrate && gunicorn StudyLife_Partner.wsgi:application
