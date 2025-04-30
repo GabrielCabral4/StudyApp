@@ -170,4 +170,4 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
 if 'GUNICORN_CMD_ARGS' not in os.environ:
-    os.environ['GUNICORN_CMD_ARGS'] = f'--bind=0.0.0.0:{PORT}'
+    os.environ['GUNICORN_CMD_ARGS'] = f'--bind=0.0.0.0:{os.getenv("PORT", "8000")}
