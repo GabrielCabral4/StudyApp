@@ -1,1 +1,1 @@
-web: bash start.sh
+web: gunicorn StudyLife_Partner.wsgi

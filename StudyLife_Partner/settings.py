@@ -160,6 +160,10 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 PORT = int(os.environ.get('PORT', 8000))
+
+if not os.environ.get('GUNICORN_CMD_ARGS'):
+    os.environ['GUNICORN_CMD_ARGS'] = f'--bind=0.0.0.0:{PORT} --workers=2 --timeout=120'
+
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
@@ -168,6 +172,3 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-
-if 'GUNICORN_CMD_ARGS' not in os.environ:
-    os.environ['GUNICORN_CMD_ARGS'] = f'--bind=0.0.0.0:{os.getenv("PORT", "8000")}
