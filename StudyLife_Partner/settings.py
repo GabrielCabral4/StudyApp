@@ -168,3 +168,6 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+if 'GUNICORN_CMD_ARGS' not in os.environ:
+    os.environ['GUNICORN_CMD_ARGS'] = f'--bind=0.0.0.0:{PORT}'
