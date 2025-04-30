@@ -2281,7 +2281,7 @@ mark.highlight {
     gap: 1.5rem;
 }
 .module-card {
-    background: var(--background-card);
+    background: #ffffff;
     border-radius: 12px;
     padding: 1.5rem;
 }
@@ -2297,7 +2297,7 @@ mark.highlight {
 }
 .module-card ul li a {
     text-decoration: none;
-    color: var(--text-color);
+    color: #000000;
 }
 .dashboard-summary {
     display: flex;
@@ -2305,7 +2305,7 @@ mark.highlight {
     gap: 1.5rem;
 }
 .summary-card {
-    background: var(--background-card);
+    background: #ffffff;
     border-radius: 12px;
     padding: 1.5rem;
     flex: 1;
