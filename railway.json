@@ -1,7 +1,7 @@
 {
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "chmod +x start.sh && python manage.py collectstatic --noinput"
+    "buildCommand": "python manage.py collectstatic --noinput"
   },
   "deploy": {
     "startCommand": "gunicorn StudyLife_Partner.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120"

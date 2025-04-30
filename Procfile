@@ -1,1 +1,1 @@
-web: gunicorn StudyLife_Partner.wsgi
+web: python manage.py collectstatic --noinput && gunicorn StudyLife_Partner.wsgi --bind 0.0.0.0:$PORT
