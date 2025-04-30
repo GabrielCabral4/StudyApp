@@ -1,7 +1,7 @@
-django>=5.0.0
-gunicorn>=20.0.4
-python-decouple>=3.6
-dj-database-url>=0.5.0
-whitenoise>=6.0.0
-psycopg2-binary>=2.9.3
-ckeditor>=6.0.0
+django==5.0.0
+gunicorn==20.1.0
+python-decouple==3.8
+dj-database-url==2.1.0
+whitenoise==6.6.0
+psycopg2-binary==2.9.9
+django-ckeditor==6.7.0
