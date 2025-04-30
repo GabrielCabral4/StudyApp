@@ -1,1 +1,1 @@
-web: gunicorn StudyLife_Partner.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --preload
+web: gunicorn StudyLife_Partner.wsgi --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --preload --access-logfile - --error-logfile -
