@@ -159,4 +159,4 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-PORT = config('PORT', default=8000, cast=int)
+PORT = int(os.environ.get('PORT', 8000))
