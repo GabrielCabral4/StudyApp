@@ -10,7 +10,7 @@ from calendar import monthrange
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 
-
+@login_required
 def home(request):
     proximos_eventos = EventoCalendario.objects.filter(
         data__gte=datetime.now()
@@ -28,7 +28,7 @@ def home(request):
     }
     return render(request, 'study_companion/home.html', context)
 
-
+@login_required
 def disciplinas_list(request):
     periodo_filtro = request.GET.get('periodo')
     search_filtro = request.GET.get('search')
@@ -42,7 +42,7 @@ def disciplinas_list(request):
     
     return render(request, 'study_companion/disciplinas/list.html', {'disciplinas': disciplinas})
 
-
+@login_required
 def disciplina_create(request):
     if request.method == 'POST':
         form = DisciplinaForm(request.POST)
@@ -53,7 +53,7 @@ def disciplina_create(request):
         form = DisciplinaForm()
     return render(request, 'study_companion/disciplinas/create.html', {'form': form})
 
-
+@login_required
 def disciplina_update(request, pk):
     disciplina = get_object_or_404(Disciplina, pk=pk)
 
@@ -66,7 +66,7 @@ def disciplina_update(request, pk):
         form = DisciplinaForm(instance=disciplina)
     return render(request, 'study_companion/disciplinas/update.html', {'form': form, 'disciplina': disciplina})
 
-
+@login_required
 def disciplina_delete(request, pk):
     disciplina = get_object_or_404(Disciplina, pk=pk)
     if request.method == 'POST':
@@ -74,7 +74,7 @@ def disciplina_delete(request, pk):
         return redirect('disciplinas')
     return render(request, 'study_companion/disciplinas/delete.html', {'disciplina': disciplina})
 
-
+@login_required
 def flashcards_list(request):
     disciplinas = Disciplina.objects.all()
     disciplina_id = request.GET.get('disciplina')
@@ -93,7 +93,7 @@ def flashcards_list(request):
         'disciplinas': disciplinas
     })
 
-
+@login_required
 def flashcard_create(request):
     if request.method == 'POST':
         form = FlashcardForm(request.POST)
@@ -104,7 +104,7 @@ def flashcard_create(request):
         form = FlashcardForm()
     return render(request, 'study_companion/flashcards/create.html', {'form': form})
 
-
+@login_required
 def flashcard_update(request, pk):
     flashcard = get_object_or_404(Flashcard, pk=pk)
 
@@ -117,14 +117,14 @@ def flashcard_update(request, pk):
         form = FlashcardForm(instance=flashcard)
     return render(request, 'study_companion/flashcards/update.html', {'form': form, 'editar': True})
 
-
+@login_required
 @require_POST
 def flashcard_delete(request, pk):
     flashcard = get_object_or_404(Flashcard, pk=pk)
     flashcard.delete()
     return redirect('flashcards')
 
-
+@login_required
 def anotacoes_list(request):
     disciplinas = Disciplina.objects.all()
     disciplina_id = request.GET.get('disciplina')
@@ -151,7 +151,7 @@ def anotacoes_list(request):
         'categorias': [('aula', 'Anotação de Aula'), ('caso', 'Caso Clínico'), ('resumo', 'Resumo')]
     })
 
-
+@login_required
 def anotacao_create(request):
     if request.method == 'POST':
         form = AnotacaoForm(request.POST)
@@ -162,7 +162,7 @@ def anotacao_create(request):
         form = AnotacaoForm()
     return render(request, 'study_companion/anotacoes/create.html', {'form': form})
 
-
+@login_required
 def anotacao_update(request, pk):
     anotacao = get_object_or_404(Anotacao, pk=pk)
 
@@ -175,14 +175,14 @@ def anotacao_update(request, pk):
         form = AnotacaoForm(instance=anotacao)
     return render(request, 'study_companion/anotacoes/update.html', {'form': form, 'anotacao': anotacao})
 
-
+@login_required
 @require_POST
 def anotacao_delete(request, pk):
     anotacao = get_object_or_404(Anotacao, pk=pk)
     anotacao.delete()
     return redirect('anotacoes')
 
-
+@login_required
 def calendario_view(request):
     hoje = datetime.now()
     mes_atual = hoje.month
@@ -218,7 +218,7 @@ def calendario_view(request):
         'ano_atual': ano,
     })
 
-
+@login_required
 def evento_create(request):
     if request.method == 'POST':
         form = EventoCalendarioForm(request.POST)
@@ -232,7 +232,7 @@ def evento_create(request):
         'form': form,
     })
 
-
+@login_required
 def evento_update(request, pk):
     evento = get_object_or_404(EventoCalendario, pk=pk)
     if request.method == 'POST':
@@ -244,7 +244,7 @@ def evento_update(request, pk):
         form = EventoCalendarioForm(instance=evento)
     return render(request, 'study_companion/calendario/form.html', {'form': form, 'evento': evento})
 
-
+@login_required
 def evento_delete(request, pk):
     evento = get_object_or_404(EventoCalendario, pk=pk)
     if request.method == 'POST':
@@ -252,7 +252,7 @@ def evento_delete(request, pk):
         return redirect('calendario')
     return render(request, 'study_companion/calendario/delete.html', {'evento': evento})
 
-
+@login_required
 def evento_concluir(request, pk):
     evento = get_object_or_404(EventoCalendario, pk=pk)
     evento.concluido = True
@@ -260,7 +260,7 @@ def evento_concluir(request, pk):
     messages.sucess(request, f"Evento '{evento.titulo}' marcado como concluído.")
     return redirect('calendario')
 
-
+@login_required
 def refeicoes_list(request):
     dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
     planos = [PlanejamentoRefeicao.objects.get_or_create(dia_semana=i)[0] for i in range(7)]
@@ -288,7 +288,7 @@ def refeicoes_list(request):
         'receitas': receitas,
     })
 
-
+@login_required
 def receitas_list(request):
     dificuldade = request.GET.get('dificuldade')
     tempo_max = request.GET.get('tempo_max')
@@ -329,7 +329,7 @@ def receitas_list(request):
         'search': termo_busca
     })
 
-
+@login_required
 def receita_create(request):
     if request.method == 'POST':
         form = ReceitaForm(request.POST)
@@ -341,7 +341,7 @@ def receita_create(request):
 
     return render(request, 'study_companion/receitas/create.html', {'form': form})
 
-
+@login_required
 def receita_update(request, pk):
     receita = get_object_or_404(Receita, pk=pk)
     if request.method == 'POST':
@@ -353,7 +353,7 @@ def receita_update(request, pk):
         form = ReceitaForm(instance=receita)
     return render(request, 'study_companion/receitas/update.html', {'form': form, 'receita': receita})
 
-
+@login_required
 def receita_delete(request, pk):
     receita = get_object_or_404(Receita, pk=pk)
     if request.method == 'POST':
@@ -361,7 +361,7 @@ def receita_delete(request, pk):
         return redirect('receitas')
     return render(request, 'study_companion/receitas/delete.html', {'receita': receita})
 
-
+@login_required
 def lembretes_list(request):
     lembretes = Lembrete.objects.all()
     dias_semana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]
@@ -370,7 +370,7 @@ def lembretes_list(request):
         'dias_semana': dias_semana,
     })
 
-
+@login_required
 def lembrete_create(request):
     if request.method == 'POST':
         form = LembreteForm(request.POST)
@@ -381,7 +381,7 @@ def lembrete_create(request):
         form = LembreteForm()
     return render(request, 'study_companion/lembretes/form.html', {'form': form, 'titulo': 'Novo Lembrete'})
 
-
+@login_required
 def lembrete_update(request, pk):
     lembrete = get_object_or_404(Lembrete, pk=pk)
     if request.method == 'POST':
@@ -393,7 +393,7 @@ def lembrete_update(request, pk):
         form = LembreteForm(instance=lembrete)
     return render(request, 'study_companion/lembretes/form.html', {'form': form, 'titulo': 'Editar Lembrete'})
 
-
+@login_required
 def lembrete_delete(request, pk):
     lembrete = get_object_or_404(Lembrete, pk=pk)
     if request.method == 'POST':
@@ -401,7 +401,7 @@ def lembrete_delete(request, pk):
         return redirect('lembretes')
     return render(request, 'study_companion/lembretes/delete.html', {'lembrete': lembrete})
 
-
+@login_required
 def relaxamento_list(request):
     atividades = AtividadeRelaxamento.objects.all().order_by('duracao')
     duracao = request.GET.get('duracao', None)
@@ -411,7 +411,7 @@ def relaxamento_list(request):
 
     return render(request, 'study_companion/relaxamento/list.html', {'atividades': atividades})
 
-
+@login_required
 def relaxamento_create(request):
     if request.method == 'POST':
         form = AtividadeRelaxamentoForm(request.POST)
@@ -423,7 +423,7 @@ def relaxamento_create(request):
         form = AtividadeRelaxamentoForm()
     return render(request, 'study_companion/relaxamento/create.html', {'form': form})
 
-
+@login_required
 def relaxamento_update(request, pk):
     atividade = get_object_or_404(AtividadeRelaxamento, pk=pk)
     if request.method == 'POST':
@@ -436,7 +436,7 @@ def relaxamento_update(request, pk):
         form = AtividadeRelaxamentoForm(instance=atividade)
     return render(request, 'study_companion/relaxamento/update.html', {'form': form})
 
-
+@login_required
 def relaxamento_delete(request, pk):
     atividade = get_object_or_404(AtividadeRelaxamento, pk=pk)
     if request.method == 'POST':
@@ -445,12 +445,12 @@ def relaxamento_delete(request, pk):
         return redirect('relaxamento')
     return render(request, 'study_companion/relaxamento/delete.html', {'object': atividade})
 
-
+@login_required
 def motivacional_list(request):
     mensagens = MensagemMotivacional.objects.all().order_by('-data_criacao')
     return render(request, 'study_companion/motivacional/list.html', {'mensagens': mensagens})
 
-
+@login_required
 def motivacional_create(request):
     if request.method == 'POST':
         form = MensagemMotivacionalForm(request.POST)
@@ -463,7 +463,7 @@ def motivacional_create(request):
     
     return render(request, 'study_companion/motivacional/form.html', {'form': form, 'modo': 'Adicionar'})
 
-
+@login_required
 def motivacional_update(request, pk):
     mensagem = get_object_or_404(MensagemMotivacional, pk=pk)
     if request.method == 'POST':
@@ -477,7 +477,7 @@ def motivacional_update(request, pk):
     
     return render(request, 'study_companion/motivacional/form.html', {'form': form, 'modo': 'Editar'})
 
-
+@login_required
 def motivacional_delete(request, pk):
     mensagem = get_object_or_404(MensagemMotivacional, pk=pk)
     
@@ -521,7 +521,7 @@ def mural_view(request):
         'parceiro': parceiro
     })
 
-
+@login_required
 def mural_update(request, pk):
     recado = get_object_or_404(RecadoMural, pk=pk)
 
@@ -533,7 +533,7 @@ def mural_update(request, pk):
     
     return render(request, 'study_companion/mural/update.html', {'recado': recado})
 
-
+@login_required
 def mural_delete(request, pk):
     recado = get_object_or_404(RecadoMural, pk=pk)
 
@@ -618,7 +618,7 @@ def encerrar_parceria(request, parceria_id):
         messages.success(request, "Parceria encerrada.")
     return redirect('gerenciar_parceria')
 
-
+@login_required
 def dashboard(request):
     disciplinas_count = Disciplina.objects.count()
     flashcards_count = Flashcard.objects.count()
@@ -636,7 +636,7 @@ def dashboard(request):
 def settings_view(request):
     return render(request, 'study_companion/settings.html')
 
-
+@login_required
 def account_view(request):
     return render(request, 'study_companion/account.html')
 
